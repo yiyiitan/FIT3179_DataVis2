@@ -1,0 +1,131 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Malaysia's Ten Warmest Years on Record",
+    "subtitle": "Annual anomaly vs 1991-2020. Source: OWID / Copernicus ERA5.",
+    "fontSize": 20,
+    "subtitleFontSize": 12,
+    "anchor": "start",
+    "offset": 15
+  },
+  "width": 650,
+  "height": 380,
+  "background": "transparent",
+  "data": {
+    "url": "data/lollipop.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {
+      "calculate": "toNumber(datum.Year)",
+      "as": "YearNum"
+    },
+    {
+      "calculate": "toNumber(datum.Temperature_Anomaly_Celsius)",
+      "as": "Anomaly"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "YearNum",
+      "type": "ordinal",
+      "sort": "-x",
+      "title": "Year",
+      "axis": {
+        "labelFontSize": 12,
+        "titleFontSize": 13,
+        "labelAngle": 0
+      }
+    },
+    "x": {
+      "field": "Anomaly",
+      "type": "quantitative",
+      "title": "Temperature anomaly (°C)",
+      "scale": {
+        "zero": true,
+        "nice": true
+      },
+      "axis": {
+        "labelFontSize": 11,
+        "titleFontSize": 13,
+        "grid": true,
+        "format": ".2f"
+      }
+    },
+    "tooltip": [
+      {
+        "field": "YearNum",
+        "type": "ordinal",
+        "title": "Year"
+      },
+      {
+        "field": "Anomaly",
+        "type": "quantitative",
+        "title": "Temperature anomaly",
+        "format": ".2f"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 3,
+        "color": "#A7B8A2"
+      },
+      "encoding": {
+        "x": {
+          "datum": 0
+        },
+        "x2": {
+          "field": "Anomaly"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 130,
+        "color": "#B85C45",
+        "stroke": "#FFFFFF",
+        "strokeWidth": 1
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 8,
+        "fontSize": 11,
+        "color": "#65483D"
+      },
+      "encoding": {
+        "text": {
+          "field": "Anomaly",
+          "type": "quantitative",
+          "format": ".2f"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "domainColor": "#B7B0A6",
+      "tickColor": "#B7B0A6",
+      "labelColor": "#4F4A43",
+      "titleColor": "#4F4A43",
+      "gridColor": "#E7E1D8"
+    },
+    "title": {
+      "color": "#38362F"
+    }
+  }
+}

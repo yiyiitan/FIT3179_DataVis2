@@ -1,0 +1,311 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "height": 500,
+  "width": 750,
+  "title": {
+    "text": "The Sources of Malaysia's Heat: Emission Flows",
+    "subtitle": "Flow of greenhouse gases from specific activities to macro sectors (Gg CO2e).",
+    "font": "sans-serif",
+    "fontSize": 16,
+    "offset": 10
+  },
+  "config": {
+    "text": { "font": "sans-serif" },
+    "background": "transparent",
+    "axis": {
+      "labelFont": "sans-serif",
+      "titleFont": "sans-serif",
+      "labelFontSize": 12,
+      "titleFontSize": 14,
+      "grid": false
+    },
+    "view": { "stroke": null }
+  },
+  "data": [
+    {
+      "name": "rawData",
+      "url": "data/emissions_alluvial.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "Subsector": "string",
+          "Sector": "string",
+          "Emissions": "number"
+        }
+      },
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.Sector != null"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.Subsector",
+          "as": "stk1"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.Sector",
+          "as": "stk2"
+        },
+        {
+          "type": "aggregate",
+          "groupby": ["stk1", "stk2"],
+          "fields": ["Emissions"],
+          "ops": ["sum"],
+          "as": ["size"]
+        }
+      ]
+    },
+    {
+      "name": "nodes",
+      "source": "rawData",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "!groupSelector || groupSelector.stk1 == datum.stk1 || groupSelector.stk2 == datum.stk2"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.stk1 + datum.stk2",
+          "as": "key"
+        },
+        {
+          "type": "fold",
+          "fields": ["stk1", "stk2"],
+          "as": ["stack", "grpId"]
+        },
+        {
+          "type": "formula",
+          "expr": "indexof(['Agriculture', 'Waste', 'Industrial processes and product use', 'Petroleum refining', 'LNG production', 'Other energy activities', 'Transport', 'Electricity and heat production'], datum.stk1)",
+          "as": "leftOrder"
+        },
+        {
+          "type": "formula",
+          "expr": "indexof(['Energy Sector', 'Industrial Sector', 'Waste Sector', 'Agriculture Sector'], datum.stk2)",
+          "as": "rightOrder"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.stack == 'stk1' ? (datum.leftOrder * 1000 + datum.rightOrder) : (datum.rightOrder * 1000 + datum.leftOrder)",
+          "as": "sortField"
+        },
+        {
+          "type": "stack",
+          "groupby": ["stack"],
+          "sort": {"field": "sortField", "order": "ascending"},
+          "field": "size"
+        },
+        {
+          "type": "formula",
+          "expr": "(datum.y0 + datum.y1) / 2",
+          "as": "yc"
+        }
+      ]
+    },
+    {
+      "name": "groups",
+      "source": "nodes",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["stack", "grpId"],
+          "fields": ["size"],
+          "ops": ["sum"],
+          "as": ["total"]
+        },
+        {
+          "type": "formula",
+          "expr": "indexof(['Agriculture', 'Waste', 'Industrial processes and product use', 'Petroleum refining', 'LNG production', 'Other energy activities', 'Transport', 'Electricity and heat production', 'Energy Sector', 'Industrial Sector', 'Waste Sector', 'Agriculture Sector'], datum.grpId)",
+          "as": "groupSortIndex"
+        },
+        {
+          "type": "stack",
+          "groupby": ["stack"],
+          "sort": {"field": "groupSortIndex", "order": "ascending"},
+          "field": "total"
+        },
+        {
+          "type": "formula",
+          "expr": "scale('y', datum.y0)",
+          "as": "scaledY0"
+        },
+        {
+          "type": "formula",
+          "expr": "scale('y', datum.y1)",
+          "as": "scaledY1"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.stack == 'stk1'",
+          "as": "rightLabel"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.total / domain('y')[1]",
+          "as": "percentage"
+        }
+      ]
+    },
+    {
+      "name": "destinationNodes",
+      "source": "nodes",
+      "transform": [
+        {"type": "filter", "expr": "datum.stack == 'stk2'"}
+      ]
+    },
+    {
+      "name": "edges",
+      "source": "nodes",
+      "transform": [
+        {"type": "filter", "expr": "datum.stack == 'stk1'"},
+        {
+          "type": "lookup",
+          "from": "destinationNodes",
+          "key": "key",
+          "fields": ["key"],
+          "as": ["target"]
+        },
+        {
+          "type": "linkpath",
+          "orient": "horizontal",
+          "shape": "diagonal",
+          "sourceY": {"expr": "scale('y', datum.yc)"},
+          "sourceX": {"expr": "scale('x', 'stk1') + bandwidth('x')"},
+          "targetY": {"expr": "scale('y', datum.target.yc)"},
+          "targetX": {"expr": "scale('x', 'stk2')"}
+        },
+        {
+          "type": "formula",
+          "expr": "range('y')[0] - scale('y', datum.size)",
+          "as": "strokeWidth"
+        },
+        {
+          "type": "formula",
+          "expr": "datum.size / domain('y')[1]",
+          "as": "percentage"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "band",
+      "range": "width",
+      "domain": ["stk1", "stk2"],
+      "paddingOuter": 0.05,
+      "paddingInner": 0.95
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "domain": {"data": "nodes", "field": "y1"}
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "range": [
+        "#8c510a", "#bf812d", "#878787", "#4d4d4d", 
+        "#fdae61", "#f46d43", "#d73027", "#a50026", 
+        "#b2182b", "#4d4d4d", "#8c510a", "#1a9850"
+      ],
+      "domain": {"data": "rawData", "fields": ["stk1", "stk2"]}
+    }
+  ],
+  "marks": [
+    {
+      "type": "path",
+      "name": "edgeMark",
+      "from": {"data": "edges"},
+      "clip": true,
+      "encode": {
+        "update": {
+          "stroke": [
+            {
+              "test": "groupSelector && groupSelector.stack=='stk1'",
+              "scale": "color",
+              "field": "stk2"
+            },
+            {"scale": "color", "field": "stk1"}
+          ],
+          "strokeWidth": {"field": "strokeWidth"},
+          "path": {"field": "path"},
+          "strokeOpacity": {
+            "signal": "!groupSelector && (groupHover.stk1 == datum.stk1 || groupHover.stk2 == datum.stk2) ? 0.85 : 0.35"
+          },
+          "zindex": {
+            "signal": "!groupSelector && (groupHover.stk1 == datum.stk1 || groupHover.stk2 == datum.stk2) ? 1 : 0"
+          },
+          "tooltip": {
+            "signal": "datum.stk1 + ' → ' + datum.stk2 + ': ' + format(datum.size, ',.0f') + ' Gg CO2e'"
+          }
+        },
+        "hover": {"strokeOpacity": {"value": 1}}
+      }
+    },
+    {
+      "type": "rect",
+      "name": "groupMark",
+      "from": {"data": "groups"},
+      "encode": {
+        "enter": {
+          "fill": {"scale": "color", "field": "grpId"},
+          "width": {"scale": "x", "band": 1}
+        },
+        "update": {
+          "x": {"scale": "x", "field": "stack"},
+          "y": {"field": "scaledY0"},
+          "y2": {"field": "scaledY1"},
+          "fillOpacity": {"value": 1},
+          "tooltip": {
+            "signal": "datum.grpId + ' Total: ' + format(datum.total, ',.0f') + ' Gg CO2e (' + format(datum.percentage, '.1%') + ')'"
+          }
+        },
+        "hover": {"fillOpacity": {"value": 0.8}}
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "groups"},
+      "interactive": false,
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "scale('x', datum.stack) + (datum.rightLabel ? bandwidth('x') + 8 : -8)"
+          },
+          "yc": {"signal": "(datum.scaledY0 + datum.scaledY1)/2"},
+          "align": {"signal": "datum.rightLabel ? 'left' : 'right'"},
+          "baseline": {"value": "middle"},
+          "fontWeight": {"value": "bold"},
+          "text": {"signal": "datum.grpId"}
+        }
+      }
+    }
+  ],
+  "signals": [
+    {
+      "name": "groupHover",
+      "value": {},
+      "on": [
+        {
+          "events": "@groupMark:mouseover",
+          "update": "{stk1:datum.stack=='stk1' && datum.grpId, stk2:datum.stack=='stk2' && datum.grpId}"
+        },
+        {"events": "mouseout", "update": "{}"}
+      ]
+    },
+    {
+      "name": "groupSelector",
+      "value": false,
+      "on": [
+        {
+          "events": "@groupMark:click!",
+          "update": "{stack:datum.stack, stk1:datum.stack=='stk1' && datum.grpId, stk2:datum.stack=='stk2' && datum.grpId}"
+        },
+        {"events": "dblclick", "update": "false"}
+      ]
+    }
+  ]
+}

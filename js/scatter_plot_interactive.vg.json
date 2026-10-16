@@ -1,0 +1,158 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 600,
+  "title": {
+    "text": "Big Emitters Drive the Warming (2022)",
+    "subtitle": "CO₂ vs anomaly. Source: OWID / Global Carbon Project.",
+    "fontSize": 18,
+    "subtitleFontSize": 12,
+    "anchor": "start",
+    "offset": 12
+  },
+  "background": "transparent",
+  "data": {
+    "url": "data/co2_temp_pop_2022.csv"
+  },
+  "params": [
+    {
+      "name": "Population_Above",
+      "value": 0,
+      "bind": {
+        "input": "range",
+        "min": 0,
+        "max": 200000000,
+        "step": 10000000,
+        "name": "Minimum Population: "
+      }
+    },
+    {
+      "name": "Continent_selection",
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          "North America",
+          "South America",
+          "Europe",
+          "Africa",
+          "Asia",
+          "Oceania"
+        ],
+        "labels": [
+          "Show All",
+          "North America",
+          "South America",
+          "Europe",
+          "Africa",
+          "Asia",
+          "Oceania"
+        ],
+        "name": "Continent Selection: "
+      }
+    }
+  ],
+  "transform": [
+    {"filter": "datum.Population > Population_Above"},
+    {
+      "filter": "Continent_selection == null || datum.Continent == Continent_selection"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "CO2_Emissions_Mt",
+      "type": "quantitative",
+      "title": "CO₂ Emissions (Million Tonnes)",
+      "axis": {
+        "values": [100, 1000, 10000]
+      },
+      "scale": {"type": "log", "domain": [50, 20000]}
+    },
+    "y": {
+      "field": "Temp_Anomaly",
+      "type": "quantitative",
+      "title": "Temperature Anomaly in 2022 (°C)",
+      "axis": {
+        "tickCount": 6
+      },
+      "scale": {"domain": [-0.5, 1.5]}
+    }
+  },
+  "layer": [
+    {
+      "mark": "circle",
+      "params": [
+        {
+          "name": "continentHover",
+          "select": {"type": "point", "on": "mouseover", "fields": ["Continent"], "clear": "mouseout"}
+        }
+      ],
+      "encoding": {
+        "size": {
+          "field": "Population",
+          "type": "quantitative",
+          "scale": {
+            "type": "threshold",
+            "domain": [10000000, 50000000, 100000000, 500000000, 1000000000],
+            "range": [30, 80, 200, 400, 800]
+          },
+          "legend": {"format": ".1s"}
+        },
+        "color": {
+          "field": "Continent",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "North America",
+              "South America",
+              "Europe",
+              "Africa",
+              "Asia",
+              "Oceania"
+            ],
+            "range": [
+              "#e41a1c",
+              "#984ea3",
+              "#ff7f00",
+              "#a6cee3",
+              "#377eb8",
+              "#a65628"
+            ]
+          }
+        },
+        "opacity": {
+          "condition": {"param": "continentHover", "value": 0.9, "empty": true},
+          "value": 0.2
+        },
+        "tooltip": [
+          {"field": "Country", "type": "nominal"},
+          {"field": "Continent", "type": "nominal"},
+          {"field": "CO2_Emissions_Mt", "type": "quantitative", "title": "CO₂ Emissions (Mt)", "format": ","},
+          {"field": "Temp_Anomaly", "type": "quantitative", "title": "Temp Anomaly (°C)", "format": ".3f"},
+          {"field": "Population", "type": "quantitative", "format": ","}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 16,
+        "fontSize": 11.5,
+        "fontStyle": "italic"
+      },
+      "encoding": {
+        "text": {"field": "Country", "type": "nominal"},
+        "color": {"value": "black"},
+        "opacity": {
+          "condition": {
+            "test": "datum['Country'] == 'Malaysia' || datum['Country'] == 'China' || datum['Country'] == 'United States' || datum['Country'] == 'India' || datum['Country'] == 'Brazil' || datum['Country'] == 'Australia' || datum['Country'] == 'Nigeria' || datum['Country'] == 'France'",
+            "value": 1
+          },
+          "value": 0
+        }
+      }
+    }
+  ]
+}
