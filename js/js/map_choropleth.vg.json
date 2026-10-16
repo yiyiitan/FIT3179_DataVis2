@@ -1,0 +1,114 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 400,
+  "title": {
+    "text": "Average Temperature by State, 1991-2020",
+    "subtitle": "Annual mean surface air temperature. Source: World Bank CCKP (ERA5).",
+    "fontSize": 18,
+    "subtitleFontSize": 12,
+    "anchor": "start",
+    "offset": 12
+  },
+  "background": "transparent",
+  "config": {
+    "text": { "font": "Segoe UI" },
+    "view": { "stroke": null }
+  },
+  "projection": {
+    "type": "mercator"
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/malaysia.topojson",
+        "format": {"type": "topojson", "feature": "states"}
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "lightgray",
+        "stroke": "white",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "tooltip": {
+          "field": "id",
+          "type": "nominal",
+          "title": "State (No Data)"
+        }
+      }
+    },
+    {
+      "data": {
+        "url": "data/malaysia.topojson",
+        "format": {"type": "topojson", "feature": "states"}
+      },
+      "transform": [
+        {
+          "lookup": "id",
+          "from": {
+            "data": {
+              "url": "data/state_temperatures.csv",
+              "format": {
+                "type": "csv",
+                "parse": {"AvgTemp": "number"}
+              }
+            },
+            "key": "State",
+            "fields": ["AvgTemp"]
+          }
+        }
+      ],
+      "params": [
+        {
+          "name": "hover",
+          "select": {
+            "type": "point",
+            "fields": ["id"],
+            "on": "mouseover",
+            "clear": "mouseout"
+          }
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "stroke": "white"
+      },
+      "encoding": {
+        "color": {
+          "field": "AvgTemp",
+          "type": "quantitative",
+          "scale": {
+            "scheme": "yelloworangered"
+          },
+          "title": "Avg Temp (°C)"
+        },
+        "opacity": {
+          "condition": {
+            "param": "hover",
+            "value": 1,
+            "empty": true
+          },
+          "value": 0.35
+        },
+        "strokeWidth": {
+          "condition": {
+            "param": "hover",
+            "empty": false,
+            "value": 2.5
+          },
+          "value": 1
+        },
+        "tooltip": [
+          {"field": "id", "type": "nominal", "title": "State"},
+          {
+            "field": "AvgTemp",
+            "type": "quantitative",
+            "title": "Average Temp (°C)",
+            "format": ".1f"
+          }
+        ]
+      }
+    }
+  ]
+}

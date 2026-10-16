@@ -1,0 +1,99 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 560,
+  "height": 380,
+  "background": "transparent",
+  "title": {
+    "text": "Malaysia Is Warming Alongside the World",
+    "subtitle": "Decade-average anomaly vs 1991-2020. Source: OWID / Copernicus ERA5.",
+    "fontSize": 18,
+    "subtitleFontSize": 12,
+    "anchor": "start",
+    "offset": 14
+  },
+  "data": {
+    "url": "data/malaysia_vs_global.csv",
+    "format": {
+      "type": "csv",
+      "parse": {"Malaysia_Anomaly": "number", "Global_Anomaly": "number"}
+    }
+  },
+  "encoding": {
+    "y": {
+      "field": "Decade",
+      "type": "ordinal",
+      "title": null,
+      "axis": {"labelFontSize": 12}
+    }
+  },
+  "layer": [
+    {
+      "params": [
+        {
+          "name": "decadeHover",
+          "select": {"type": "point", "fields": ["Decade"], "on": "mouseover", "clear": "mouseout"}
+        }
+      ],
+      "mark": {"type": "rule", "color": "#B7B0A6", "strokeWidth": 2},
+      "encoding": {
+        "x": {
+          "field": "Global_Anomaly",
+          "type": "quantitative",
+          "title": "Temperature anomaly (°C)",
+          "scale": {"domain": [-1.8, 0.8]},
+          "axis": {"titleFontSize": 13, "format": ".1f"}
+        },
+        "x2": {"field": "Malaysia_Anomaly"},
+        "opacity": {
+          "condition": {"param": "decadeHover", "value": 1, "empty": true},
+          "value": 0.25
+        }
+      }
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 150, "stroke": "white", "strokeWidth": 1},
+      "encoding": {
+        "x": {"field": "Global_Anomaly", "type": "quantitative"},
+        "color": {
+          "datum": "Global",
+          "scale": {"domain": ["Global", "Malaysia"], "range": ["#4F7CAC", "#B85C45"]},
+          "legend": {"title": null, "orient": "top-left"}
+        },
+        "opacity": {
+          "condition": {"param": "decadeHover", "value": 1, "empty": true},
+          "value": 0.25
+        },
+        "tooltip": [
+          {"field": "Decade", "type": "ordinal"},
+          {"field": "Global_Anomaly", "type": "quantitative", "title": "Global (°C)", "format": ".2f"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 150, "stroke": "white", "strokeWidth": 1},
+      "encoding": {
+        "x": {"field": "Malaysia_Anomaly", "type": "quantitative"},
+        "color": {"datum": "Malaysia"},
+        "opacity": {
+          "condition": {"param": "decadeHover", "value": 1, "empty": true},
+          "value": 0.25
+        },
+        "tooltip": [
+          {"field": "Decade", "type": "ordinal"},
+          {"field": "Malaysia_Anomaly", "type": "quantitative", "title": "Malaysia (°C)", "format": ".2f"}
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": {"stroke": null},
+    "axis": {
+      "domainColor": "#B7B0A6",
+      "tickColor": "#B7B0A6",
+      "labelColor": "#4F4A43",
+      "titleColor": "#4F4A43",
+      "gridColor": "#E7E1D8"
+    },
+    "title": {"color": "#38362F"}
+  }
+}
