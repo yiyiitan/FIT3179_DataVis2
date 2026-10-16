@@ -1,0 +1,33 @@
+Country,Continent,Population,CO2_Emissions_Mt,Temp_Anomaly
+China,Asia,1425887000,11712,0.599
+United States,North America,338289000,5055,0.275
+India,Asia,1417173000,2831,0.271
+Russia,Europe,144713000,1675,0.987
+Japan,Asia,123951000,1030,0.688
+Iran,Asia,88550000,767,1.196
+Indonesia,Asia,275501000,758,0.299
+Germany,Europe,83369000,668,1.221
+Saudi Arabia,Asia,36408000,667,0.838
+South Korea,Asia,51815000,607,0.384
+Canada,North America,38929000,548,0.127
+Brazil,South America,215313000,480,-0.205
+Mexico,North America,127504000,454,0.106
+Turkey,Europe,85341000,444,0.569
+South Africa,Africa,59893000,429,0.210
+Australia,Oceania,26012000,384,-0.293
+Italy,Europe,58940000,340,1.276
+Poland,Europe,39865000,315,0.791
+United Kingdom,Europe,66971000,311,0.904
+France,Europe,67935000,295,1.316
+Thailand,Asia,71697000,273,-0.001
+Egypt,Africa,110990000,250,-0.095
+Spain,Europe,47778000,234,1.272
+Pakistan,Asia,235825000,212,0.767
+Algeria,Africa,44903000,193,0.969
+Argentina,South America,46234000,184,0.072
+Philippines,Asia,115559000,151,0.306
+Nigeria,Africa,218541000,131,-0.091
+Bangladesh,Asia,171186000,102,0.433
+Colombia,South America,51874000,89,0.084
+Chile,South America,19603000,86,-0.239
+Malaysia,Asia,34308000,267,0.345
