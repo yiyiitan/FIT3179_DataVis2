@@ -1,0 +1,336 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 500,
+  "background": "transparent",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "padding": {
+    "left": 4,
+    "right": 4,
+    "top": 4,
+    "bottom": 4
+  },
+  "projection": {
+    "type": "equalEarth"
+  },
+  "layer": [
+    {
+      "description": "Map outline",
+      "data": {
+        "sphere": true
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": null,
+        "stroke": "#c9bfae",
+        "strokeWidth": 0.8
+      }
+    },
+    {
+      "description": "Graticules",
+      "data": {
+        "graticule": {
+          "step": [30, 30]
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": null,
+        "stroke": "#d9d0c0",
+        "strokeWidth": 0.5,
+        "opacity": 0.7
+      }
+    },
+    {
+      "description": "Country shapes",
+      "data": {
+        "url": "data/ne_110m.topojson",
+        "format": {
+          "type": "topojson",
+          "feature": "ne_110m_admin_0_countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.properties.ADM0_A3 !== 'ATA'"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e6dfd2",
+        "stroke": "#cfc7ba",
+        "strokeWidth": 0.4
+      }
+    },
+    {
+      "description": "Leader lines for the three callouts",
+      "data": {
+        "values": [
+          {
+            "lon": 130,
+            "lat": 50,
+            "lon2": 106,
+            "lat2": 36
+          },
+          {
+            "lon": -118,
+            "lat": 20,
+            "lon2": -100,
+            "lat2": 34
+          },
+          {
+            "lon": 92,
+            "lat": -35,
+            "lon2": 101.2,
+            "lat2": 3.6
+          }
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "stroke": "#555555",
+        "strokeWidth": 0.8
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "longitude2": {
+          "field": "lon2"
+        },
+        "latitude2": {
+          "field": "lat2"
+        }
+      }
+    },
+    {
+      "description": "Proportional circles",
+      "data": {
+        "url": "data/co2_emissions_by_country_2024.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "datum.co2_emissions_tons_2024 / 1e9",
+          "as": "co2_gt"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "opacity": 0.78,
+        "stroke": "#333333",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "size": {
+          "field": "co2_gt",
+          "type": "quantitative",
+          "title": "CO₂ in 2024 (billion tonnes)",
+          "scale": {
+            "type": "sqrt",
+            "range": [12, 2000],
+            "zero": true
+          },
+          "legend": {
+            "orient": "top-left",
+            "direction": "vertical",
+            "values": [0.5, 2, 5, 12],
+            "format": ".1f",
+            "symbolType": "circle"
+          }
+        },
+        "color": {
+          "field": "year_change_percent",
+          "type": "quantitative",
+          "title": "Change from 2023 (%)",
+          "scale": {
+            "domain": [-10, 0, 10],
+            "range": ["#1f78b4", "#f2efe9", "#d55e00"],
+            "clamp": true
+          },
+          "legend": {
+            "orient": "bottom-right",
+            "gradientLength": 140,
+            "format": "+.0f"
+          }
+        },
+        "order": {
+          "field": "co2_emissions_tons_2024",
+          "type": "quantitative",
+          "sort": "descending"
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "type": "nominal",
+            "title": "Country"
+          },
+          {
+            "field": "rank",
+            "type": "quantitative",
+            "title": "World rank"
+          },
+          {
+            "field": "co2_gt",
+            "type": "quantitative",
+            "title": "CO₂ (billion tonnes)",
+            "format": ".2f"
+          },
+          {
+            "field": "year_change_percent",
+            "type": "quantitative",
+            "title": "Change from 2023 (%)",
+            "format": "+.2f"
+          },
+          {
+            "field": "share_of_world_percent",
+            "type": "quantitative",
+            "title": "Share of world (%)",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Callout China",
+      "data": {
+        "values": [
+          {
+            "lon": 120,
+            "lat": 55,
+            "text": "Top global emitter: China"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "align": "left",
+        "dx": 3,
+        "color": "#7a3a00"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Callout United States",
+      "data": {
+        "values": [
+          {
+            "lon": -118,
+            "lat": 20,
+            "text": [
+              "United States: 11.7%",
+              "Together with China, they",
+              "release nearly half of",
+              "the global CO₂"
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "align": "right",
+        "dx": -3,
+        "color": "#7a3a00"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Callout Malaysia",
+      "data": {
+        "values": [
+          {
+            "lon": 110,
+            "lat": -40,
+            "text": [
+              "Malaysia: 0.8%",
+              "Tiny carbon footprint, yet",
+              "equally vulnerable to rising heat"
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "align": "right",
+        "dx": -3,
+        "color": "#7a3a00"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Plus Jakarta Sans",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "legend": {
+      "titleFontSize": 11,
+      "labelFontSize": 10,
+      "titleLimit": 300
+    }
+  }
+}

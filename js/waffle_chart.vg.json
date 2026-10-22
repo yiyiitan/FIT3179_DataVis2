@@ -1,59 +1,91 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": 320,
-  "height": 320,
+  "description": "Waffle chart: 67 of 100 squares show the share of the world's glaciers projected to vanish by 2100.",
+  "width": 240,
+  "height": 240,
+  "padding": {
+    "left": 4,
+    "right": 4,
+    "top": 4,
+    "bottom": 4
+  },
   "background": "transparent",
   "title": {
-    "text": "Where Malaysia's Emissions Come From",
-    "subtitle": "Each square is 1%. Source: Climate Watch / GHG inventory.",
-    "font": "sans-serif",
-    "fontSize": 16,
-    "subtitleFontSize": 12,
-    "anchor": "start"
+    "text": "Two in three glaciers may vanish by 2100",
+    "subtitle": "Each square is 1% of the world's glaciers.",
+    "fontSize": 13,
+    "subtitleFontSize": 11,
+    "anchor": "start",
+    "offset": 10
   },
   "data": {
-    "url": "data/emissions_sector_share.csv",
-    "format": {"type": "csv", "parse": {"share_pct": "number"}}
-  },
-  "params": [
-    {
-      "name": "sectorSelect",
-      "select": {"type": "point", "fields": ["sector"]},
-      "bind": "legend"
+    "url": "data/glacier_vanish_waffle.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "x": "number",
+        "y": "number"
+      }
     }
-  ],
-  "transform": [
-    {"calculate": "round(datum.share_pct)", "as": "blocks"},
-    {"calculate": "sequence(1, datum.blocks + 1)", "as": "seq"},
-    {"flatten": ["seq"]},
-    {
-      "window": [{"op": "row_number", "as": "id"}],
-      "sort": [{"field": "share_pct", "order": "descending"}]
-    },
-    {"calculate": "floor((datum.id - 1) / 10)", "as": "row"},
-    {"calculate": "(datum.id - 1) % 10", "as": "col"}
-  ],
-  "mark": {"type": "rect", "stroke": "white", "strokeWidth": 2, "cornerRadius": 3},
+  },
+  "mark": {
+    "type": "rect",
+    "cornerRadius": 3,
+    "stroke": "#fbf8f2",
+    "strokeWidth": 1
+  },
   "encoding": {
-    "x": {"field": "col", "type": "ordinal", "axis": null},
-    "y": {"field": "row", "type": "ordinal", "axis": null, "sort": "descending"},
-    "opacity": {
-      "condition": {"param": "sectorSelect", "value": 1, "empty": true},
-      "value": 0.2
+    "x": {
+      "field": "x",
+      "type": "ordinal",
+      "axis": null,
+      "sort": "ascending"
+    },
+    "y": {
+      "field": "y",
+      "type": "ordinal",
+      "axis": null,
+      "sort": "ascending"
     },
     "color": {
-      "field": "sector",
+      "field": "Category",
       "type": "nominal",
       "scale": {
-        "domain": ["Energy", "Industrial", "Waste", "Agriculture"],
-        "range": ["#8c510a", "#d6604d", "#4393c3", "#1a9850"]
+        "domain": [
+          "Projected to vanish",
+          "Not projected to vanish"
+        ],
+        "range": [
+          "#48cae4",
+          "#ddd6c8"
+        ]
       },
-      "legend": {"title": "Sector", "orient": "bottom", "titleFontWeight": "bold"}
+      "legend": {
+        "title": null,
+        "labelFontSize": 11,
+        "labelLimit": 240,
+        "orient": "left",
+        "direction": "vertical",
+        "symbolType": "square"
+      }
     },
     "tooltip": [
-      {"field": "sector", "type": "nominal", "title": "Sector"},
-      {"field": "share_pct", "type": "quantitative", "title": "Share (%)", "format": ".1f"}
+      {
+        "field": "Category",
+        "type": "nominal",
+        "title": "Glaciers"
+      }
     ]
   },
-  "config": {"view": {"stroke": "transparent"}}
+  "config": {
+    "font": "Plus Jakarta Sans",
+    "background": "transparent",
+    "view": {
+      "stroke": "transparent"
+    },
+    "scale": {
+      "bandPaddingInner": 0.12,
+      "bandPaddingOuter": 0.02
+    }
+  }
 }

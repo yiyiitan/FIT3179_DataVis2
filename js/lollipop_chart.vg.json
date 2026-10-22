@@ -1,0 +1,332 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Lollipop chart of each year's temperature compared with the 1991 to 2020 average.",
+  "width": "container",
+  "height": 450,
+  "background": "transparent",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "data": {
+    "url": "data/observed-timeseries-of-annual-avg-surf-air-temp.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "year": "number",
+        "temp_c": "number",
+        "smooth_c": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.year >= 1991 && datum.year <= 2020 ? datum.temp_c : null",
+      "as": "base_value"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "mean",
+          "field": "base_value",
+          "as": "baseline"
+        }
+      ]
+    },
+    {
+      "calculate": "datum.temp_c - datum.baseline",
+      "as": "anomaly"
+    },
+    {
+      "calculate": "datum.anomaly > 0 ? 'Warmer' : 'Cooler'",
+      "as": "side"
+    },
+    {
+      "calculate": "datetime(datum.year, 0, 1)",
+      "as": "date"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "date",
+      "type": "temporal",
+      "title": "Year",
+      "scale": {
+        "domain": [
+          {"year": 1989},
+          {"year": 2026}
+        ]
+      },
+      "axis": {
+        "grid": false,
+        "format": "%Y",
+        "labelAngle": 0,
+        "tickCount": {
+          "interval": "year",
+          "step": 5
+        }
+      }
+    }
+  },
+  "layer": [
+    {
+      "description": "Zero line is the 1991 to 2020 average",
+      "mark": {
+        "type": "rule",
+        "color": "#777777",
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "y": {
+          "datum": 0
+        }
+      }
+    },
+    {
+      "description": "Stems",
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 2.2,
+        "opacity": 0.9
+      },
+      "encoding": {
+        "y": {
+          "field": "anomaly",
+          "type": "quantitative",
+          "title": "Compared with the 1991–2020 average (°C)",
+          "scale": {
+            "domain": [-0.7, 1.1]
+          },
+          "axis": {
+            "format": "+.1f",
+            "grid": true,
+            "gridColor": "#e6dfd2"
+          }
+        },
+        "y2": {
+          "datum": 0
+        },
+        "color": {
+          "field": "side",
+          "type": "nominal",
+          "title": null,
+          "scale": {
+            "domain": [
+              "Cooler",
+              "Warmer"
+            ],
+            "range": [
+              "#0072b2",
+              "#d55e00"
+            ]
+          },
+          "legend": {
+            "orient": "top",
+            "direction": "horizontal",
+            "symbolType": "stroke",
+            "symbolStrokeWidth": 2.5
+          }
+        }
+      }
+    },
+    {
+      "description": "Heads",
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 100
+      },
+      "encoding": {
+        "y": {
+          "field": "anomaly",
+          "type": "quantitative"
+        },
+        "color": {
+          "field": "side",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Cooler",
+              "Warmer"
+            ],
+            "range": [
+              "#0072b2",
+              "#d55e00"
+            ]
+          }
+        },
+        "tooltip": [
+          {
+            "field": "year",
+            "type": "ordinal",
+            "title": "Year"
+          },
+          {
+            "field": "temp_c",
+            "type": "quantitative",
+            "title": "Average temperature (°C)",
+            "format": ".2f"
+          },
+          {
+            "field": "baseline",
+            "type": "quantitative",
+            "title": "1991–2020 average (°C)",
+            "format": ".2f"
+          },
+          {
+            "field": "anomaly",
+            "type": "quantitative",
+            "title": "Difference (°C)",
+            "format": "+.2f"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Label for 1998",
+      "transform": [
+        {
+          "filter": "datum.year === 1998"
+        },
+        {
+          "calculate": "'1998 spike: ' + format(datum.anomaly, '+.2f') + '°C'",
+          "as": "label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#7a3a00",
+        "align": "left",
+        "dx": -60,
+        "dy": -30
+      },
+      "encoding": {
+        "y": {
+          "field": "anomaly",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Label for 2024",
+      "transform": [
+        {
+          "filter": "datum.year === 2024"
+        },
+        {
+          "calculate": "'2024 record: ' + format(datum.anomaly, '+.2f') + '°C'",
+          "as": "label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#7a3a00",
+        "align": "right",
+        "dx": 50,
+        "dy": -25
+      },
+      "encoding": {
+        "y": {
+          "field": "anomaly",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Background box for the 1990s annotation",
+      "data": {
+        "values": [
+          {
+            "date": "1990-06-01",
+            "end_date": "1999-01-01",
+            "y_top": 1.02,
+            "y_bottom": 0.88
+          }
+        ]
+      },
+      "mark": {
+        "type": "rect",
+        "color": "#cce9f5",
+        "opacity": 0.75,
+        "cornerRadius": 4
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal"
+        },
+        "x2": {
+          "field": "end_date"
+        },
+        "y": {
+          "field": "y_top",
+          "type": "quantitative"
+        },
+        "y2": {
+          "field": "y_bottom"
+        }
+      }
+    },
+    {
+      "description": "Text inside the annotation box",
+      "data": {
+        "values": [
+          {
+            "date": "1990-09-05",
+            "y": 0.95,
+            "label": "The 1990s were mostly cooler than usual"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 13.5,
+        "fontWeight": "bold",
+        "color": "#0b4f78",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 5
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Plus Jakarta Sans",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 12,
+      "titleFontSize": 12
+    },
+    "legend": {
+      "labelFontSize": 15
+    }
+  }
+}

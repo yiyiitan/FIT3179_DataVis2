@@ -1,0 +1,199 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Stacked area chart of Malaysia's greenhouse gas emissions by gas, 1970 to 2024.",
+  "width": 600,
+  "height": 300,
+  "background": "transparent",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "padding": {
+    "left": 4,
+    "right": 4,
+    "top": 4,
+    "bottom": 4
+  },
+  "data": {
+    "url": "data/malaysia_ghg_gases.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "Year": "number",
+        "CO2": "number",
+        "CH4": "number",
+        "N2O": "number",
+        "Fgases": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "fold": [
+        "CO2",
+        "CH4",
+        "N2O",
+        "Fgases"
+      ],
+      "as": [
+        "GasCode",
+        "Raw"
+      ]
+    },
+    {
+      "calculate": "datum.GasCode === 'CO2' ? 'CO₂' : datum.GasCode === 'CH4' ? 'CH₄' : datum.GasCode === 'N2O' ? 'N₂O' : 'F-gases'",
+      "as": "Gas"
+    },
+    {
+      "calculate": "datum.GasCode === 'CO2' ? 1 : datum.GasCode === 'CH4' ? 2 : datum.GasCode === 'N2O' ? 3 : 4",
+      "as": "StackRank"
+    },
+    {
+      "calculate": "datum.Raw / 1e6",
+      "as": "Mt"
+    },
+    {
+      "calculate": "datetime(datum.Year, 0, 1)",
+      "as": "date"
+    }
+  ],
+  "layer": [
+    {
+      "mark": {
+        "type": "area",
+        "opacity": 0.92,
+        "line": {
+          "strokeWidth": 1,
+          "color": "#ffffff"
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal",
+          "title": "Year",
+          "axis": {
+            "grid": false,
+            "format": "%Y",
+            "tickCount": {
+              "interval": "year",
+              "step": 10
+            }
+          }
+        },
+        "y": {
+          "field": "Mt",
+          "type": "quantitative",
+          "title": "Million tonnes a year (CO₂ equivalent)",
+          "scale": {
+            "domain": [
+              0,
+              360
+            ]
+          },
+          "axis": {
+            "gridColor": "#e6dfd2"
+          }
+        },
+        "color": {
+          "field": "Gas",
+          "type": "nominal",
+          "title": null,
+          "scale": {
+            "domain": [
+              "CO₂",
+              "CH₄",
+              "N₂O",
+              "F-gases"
+            ],
+            "range": [
+              "#4d4d4d",
+              "#f6ae2d",
+              "#86bbd8",
+              "#d291bc"
+            ]
+          },
+          "legend": {
+            "orient": "top",
+            "direction": "horizontal",
+            "symbolType": "square"
+          }
+        },
+        "order": {
+          "field": "StackRank",
+          "type": "quantitative"
+        },
+        "tooltip": [
+          {
+            "field": "Year",
+            "type": "ordinal",
+            "title": "Year"
+          },
+          {
+            "field": "Gas",
+            "type": "nominal",
+            "title": "Gas"
+          },
+          {
+            "field": "Mt",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Million tonnes"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Callout in the empty top-left area",
+      "data": {
+        "values": [
+          {
+            "date": "1972-01-01",
+            "y": 335,
+            "label": "Emissions grew nine times since 1970"
+          },
+          {
+            "date": "1972-01-01",
+            "y": 308,
+            "label": "CO₂ makes up about 9 in 10 tonnes"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontSize": 10.5,
+        "fontWeight": "bold",
+        "color": "#2b2b2b",
+        "align": "left"
+      },
+      "encoding": {
+        "x": {
+          "field": "date",
+          "type": "temporal"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Plus Jakarta Sans",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 11,
+      "titleFontSize": 11
+    },
+    "legend": {
+      "labelFontSize": 11
+    }
+  }
+}

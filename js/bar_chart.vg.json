@@ -1,0 +1,181 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Vertical bar chart of 200 reported heat-related illness cases by type.",
+  "width": "container",
+  "height": 260,
+  "background": "transparent",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "padding": {
+    "left": 4,
+    "right": 4,
+    "top": 20,
+    "bottom": 4
+  },
+  "data": {
+    "url": "data/cases_heat_illness.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "cases": "number"
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "cornerRadiusEnd": 3,
+        "width": {
+          "band": 0.7
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "illness",
+          "type": "nominal",
+          "title": null,
+          "sort": [
+            "Heat exhaustion",
+            "Heat cramps",
+            "Heat stroke"
+          ],
+          "axis": {
+            "ticks": false,
+            "domain": false,
+            "labelFontSize": 11,
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "cases",
+          "type": "quantitative",
+          "title": "Reported cases",
+          "scale": {
+            "domain": [0, 150]
+          },
+          "axis": {
+            "grid": false,
+            "tickCount": 4
+          }
+        },
+        "color": {
+          "field": "illness",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Heat exhaustion",
+              "Heat cramps",
+              "Heat stroke"
+            ],
+            "range": [
+              "#e07a5f",
+              "#3d405b",
+              "#a4133c"
+            ]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          {
+            "field": "illness",
+            "type": "nominal",
+            "title": "Illness"
+          },
+          {
+            "field": "cases",
+            "type": "quantitative",
+            "title": "Cases"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "baseline": "bottom",
+        "dy": -4,
+        "fontSize": 11,
+        "fontWeight": "bold"
+      },
+      "encoding": {
+        "x": {
+          "field": "illness",
+          "type": "nominal",
+          "sort": [
+            "Heat exhaustion",
+            "Heat cramps",
+            "Heat stroke"
+          ]
+        },
+        "y": {
+          "field": "cases",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "cases",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "description": "Callouts placed in the empty space above short bars",
+      "data": {
+        "values": [
+          {
+            "illness": "Heat exhaustion",
+            "y": 150,
+            "label": "Exhaustion is 63% of cases"
+          },
+          {
+            "illness": "Heat stroke",
+            "y": 55,
+            "label": [
+              "Heat stroke: 1 in 9 cases,",
+              "the most serious"
+            ]
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "baseline": "bottom",
+        "fontSize": 10.5,
+        "color": "#4a3a30"
+      },
+      "encoding": {
+        "x": {
+          "field": "illness",
+          "type": "nominal",
+          "sort": [
+            "Heat exhaustion",
+            "Heat cramps",
+            "Heat stroke"
+          ]
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Plus Jakarta Sans",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "titleFontSize": 11,
+      "labelFontSize": 11
+    }
+  }
+}

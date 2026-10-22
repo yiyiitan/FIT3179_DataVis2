@@ -1,0 +1,287 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Heatmap of monthly rainfall compared with the usual amount, 1950 to 2025.",
+  "width": "container",
+  "height": 500,
+  "background": "transparent",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "padding": {
+    "top": 60,
+    "left": 4,
+    "right": 20,
+    "bottom": 10
+  },
+  "datasets": {
+    "event_cells": [
+      {
+        "year": 1998,
+        "month": "January"
+      },
+      {
+        "year": 1998,
+        "month": "February"
+      },
+      {
+        "year": 1998,
+        "month": "March"
+      },
+      {
+        "year": 1998,
+        "month": "April"
+      },
+      {
+        "year": 2014,
+        "month": "December"
+      }
+    ],
+    "event_labels": [
+      {
+        "year": 1998,
+        "text": [
+          "1998 El Niño: Drought, severe",
+          "haze and water shortages"
+        ],
+        "type": "center",
+        "label_y": -40,
+        "line_y": -18
+      },
+      {
+        "year": 2014,
+        "text": [
+          "Dec 2014 Floods: Extreme monsoon",
+          "rain inundated the east coast"
+        ],
+        "type": "center",
+        "label_y": 325,
+        "line_y": -32
+      }
+    ]
+  },
+  "data": {
+    "url": "data/malaysia_monthly_rainfall_anomalies.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "year": "number",
+        "rainfall_mm": "number",
+        "anomaly_mm": "number",
+        "anomaly_percent": "number"
+      }
+    }
+  },
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "ordinal",
+      "title": "Year",
+      "axis": {
+        "labelAngle": 0,
+        "labelOverlap": true,
+        "labelExpr": "(datum.value % 10 === 0 || datum.value === 2025) ? datum.value : ''",
+        "ticks": false,
+        "domainColor": "#cccccc",
+        "labelColor": "#555555",
+        "labelPadding": 5
+      }
+    },
+    "y": {
+      "field": "month",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "axis": {
+        "ticks": false,
+        "domain": false,
+        "labelColor": "#555555",
+        "labelFontWeight": 500
+      }
+    }
+  },
+  "layer": [
+    {
+      "description": "One square per month with crisp grid borders",
+      "mark": {
+        "type": "rect",
+        "stroke": "#ffffff",
+        "strokeWidth": 0.6
+      },
+      "encoding": {
+        "color": {
+          "field": "anomaly_mm",
+          "type": "quantitative",
+          "title": "Rainfall compared with usual (mm)",
+          "scale": {
+            "domain": [
+              -100,
+              0,
+              100
+            ],
+            "range": [
+              "#8c510a",
+              "#f6f1e7",
+              "#5e3c99"
+            ],
+            "interpolate": "lab",
+            "clamp": true
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "titleLimit": 400,
+            "gradientLength": 350,
+            "gradientThickness": 12,
+            "titlePadding": 10,
+            "offset": 20,
+            "values": [
+              -100,
+              -50,
+              0,
+              50,
+              100
+            ],
+            "labelExpr": "datum.value == -100 ? '−100 or drier' : (datum.value == 100 ? '+100 or wetter' : (datum.value > 0 ? '+' + datum.value : datum.value))"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "month",
+            "type": "nominal",
+            "title": "Month"
+          },
+          {
+            "field": "year",
+            "type": "ordinal",
+            "title": "Year"
+          },
+          {
+            "field": "rainfall_mm",
+            "type": "quantitative",
+            "title": "Total Rain (mm)",
+            "format": ".0f"
+          },
+          {
+            "field": "anomaly_mm",
+            "type": "quantitative",
+            "title": "Vs. Usual (mm)",
+            "format": "+.0f"
+          },
+          {
+            "field": "anomaly_percent",
+            "type": "quantitative",
+            "title": "Vs. Usual (%)",
+            "format": "+.0f"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Outline the highlighted months aggressively",
+      "data": {
+        "name": "event_cells"
+      },
+      "mark": {
+        "type": "rect",
+        "fill": null,
+        "stroke": "#2c2121",
+        "strokeWidth": 2.5
+      }
+    },
+    {
+      "description": "Center-aligned Text Labels",
+      "data": {
+        "name": "event_labels"
+      },
+      "transform": [
+        {
+          "filter": "datum.type === 'center'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "baseline": "bottom",
+        "fontSize": 12.5,
+        "fontWeight": 700,
+        "color": "#222222"
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal"
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "scale": null
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Left-aligned Text Labels",
+      "data": {
+        "name": "event_labels"
+      },
+      "transform": [
+        {
+          "filter": "datum.type === 'left'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 6,
+        "baseline": "bottom",
+        "fontSize": 12.5,
+        "fontWeight": 700,
+        "color": "#222222"
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal"
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative",
+          "scale": null
+        },
+        "text": {
+          "field": "text",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Plus Jakarta Sans",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titleFontWeight": 600
+    }
+  }
+}

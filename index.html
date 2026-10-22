@@ -3,201 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Temperature Change Across Malaysia</title>
 
-    <!-- Vega & Vega-Lite -->
-    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.17.0"></script>
-
-    <!-- Non-standard typefaces -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Vega and Vega-Lite libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
     <link rel="stylesheet" href="style.css">
-
-    <title>Global Temperature Change Across Malaysia</title>
 </head>
 <body>
     <div class="page">
-        <!-- Header -->
-        <div class="content-container">
+        <header class="header-container">
             <h1>Global Temperature Change Across Malaysia</h1>
-            <p class="subtitle">How a warming planet is reshaping life at home.</p>
-        </div>
+            <p class="subtitle">How a warming planet is changing life in Malaysia.</p>
+        </header>
 
-        <div class="card-container">
+        <main class="card-stack">
 
-            <!-- 1. GLOBAL CONTEXT: Scatterplot -->
-            <div class="card-column">
-                <div class="text-container">
-                    <p class="section-label">Part 1 — The Global Picture</p>
-                    <h2>The World's Big Emitters</h2>
-                    <p class="lead">
-                        Climate change is global, but its effects are local. A few nations emit most of the world's carbon dioxide. Malaysia, highlighted below, adds only a small share. Yet the atmosphere ignores borders. This global warming sets the stage for our story.
-                    </p>
-                </div>
-                <div id="interactive_scatterplot" class="vis-container"></div>
+            <!-- ================= ACT 1: THE GLOBAL CAUSE ================= -->
+            <div class="section-header">
+                <span class="section-title">The Global Cause</span>
             </div>
 
-            <!-- 2. Diverging bar: Malaysia timeline -->
-            <div class="card-row">
-                <div id="diverging_chart" class="vis-container"></div>
-                <div class="text-container">
-                    <p class="section-label">Part 2 — A Nation Warms</p>
-                    <h2>When Malaysia Tipped Into Warming</h2>
-                    <p>
-                        Each bar is one year since 1940. Blue years sat below the modern average. Red years ran hotter than it. Blue dominates the early decades. After about 2000, red takes over. Our country crossed into steady warming within a single lifetime.
-                    </p>
+            <!-- Symbol map: full width, text above -->
+            <section class="card">
+                <h2 class="chart-heading">Who Releases the Most Carbon Dioxide?</h2>
+                <div id="symbol_map" class="vis-container centered"></div>
+                <p>Carbon dioxide traps heat in the air.</p>
+                <p>China and the United States release nearly half of it.</p>
+                <p>Malaysia releases less than one percent. Yet heat ignores borders.</p>
+            </section>
+
+            <!-- Donut and area chart: side by side -->
+            <section class="card card-pair">
+                <div class="pair-col">
+                        <h2 class="chart-heading">What Produces the Gases?</h2>
+                    <div id="donut_chart" class="vis-container centered"></div>
+                    <p>Power plants cause almost 1 in 3 tonnes.</p>
+                    <p>Transport comes second, then factories and farms.</p>
                 </div>
+                <div class="pair-col">
+                    <h2 class="chart-heading">Malaysia's Emissions Keep Rising</h2>
+                    <div id="area_chart" class="vis-container centered"></div>
+                    <p>Yearly emissions are nine times higher than in 1970.</p>
+                    <p>Carbon dioxide is the biggest part.</p>
+                </div>
+            </section>
+
+
+            <!-- ================= ACT 2: MALAYSIA HEATS UP ================= -->
+            <div class="section-header">
+                <span class="section-title">Malaysia Heats Up</span>
             </div>
 
-            <!-- 3. Connected dot: Malaysia vs world -->
-            <div class="card-row reverse">
-                <div id="connected_dot_chart" class="vis-container"></div>
+            <!-- Radial: chart left, text right -->
+            <section class="card card-row" style="grid-template-columns: 1fr 1fr;">
                 <div class="text-container">
-                    <h2>Keeping Pace With the Planet</h2>
-                    <p>
-                        How does Malaysia compare with the whole world? Each line links two decade averages. One dot is global, the other is Malaysia. Both climb steadily toward the present. Malaysia started cooler but is catching up fast. We are warming alongside everyone else.
-                    </p>
+                    <h2 class="chart-heading">Malaysia Is Hot All Year</h2>
+                    <p>Temperatures barely change from month to month.</p>
+                    <p>April and May are the warmest months.</p>
+                    <p>With so little cool relief, extra heat is felt quickly.</p>
                 </div>
-            </div>
+                <div id="radial_chart" class="vis-container centered"></div>
+            </section>
 
-            <!-- 4. Heatmap: century of months -->
-            <div class="card-row">
-                <div id="heatmap_map" class="vis-container"></div>
-                <div class="text-container">
-                    <h2>A Century of Monthly Heat</h2>
-                    <p>
-                        This grid holds over 1,400 months of data. Cool blues fill the early 1900s. Deep oranges crowd the recent decades. Even our cooler monsoon months are heating up. The wall of warmth is impossible to miss.
-                    </p>
+            <!-- Lollipop: full width, text above -->
+            <section class="card">
+                <div class="card-intro">
+                    <h2 class="chart-heading">Recent Years Run Hotter Than Usual</h2>
+                    <p>Each stem compares one year with the 1991–2020 average.</p>
+                    <p>Blue years were cooler. Orange years were warmer.</p>
+                    <p>Every year since 2015 has been warmer than usual.</p>
                 </div>
-            </div>
+                <div id="lollipop_chart" class="vis-container centered"></div>
+            </section>
 
-            <!-- 5. Radial: every month hotter -->
-            <div class="card-row reverse">
-                <div id="radial_chart" class="vis-container"></div>
-                <div class="text-container">
-                    <h2>No Month Is Spared</h2>
-                    <p>
-                        Here the twelve months wrap into a circle. The pale ring shows 1901 to 1930. The red ring shows 1996 to 2025. The red ring sits outside the pale one everywhere. Every single month is now warmer than before.
-                    </p>
+            <!-- Choropleth: full width -->
+            <section class="card">
+                <div>
+                    <h2 class="chart-heading">Temperature by State</h2>
                 </div>
-            </div>
-
-            <!-- 6. Choropleth map -->
-            <div class="card-row">
                 <div id="choropleth_map" class="vis-container"></div>
-                <div class="text-container">
-                    <p class="section-label">Part 3 — Mapping the Heat</p>
-                    <h2>Which States Run Hottest</h2>
-                    <p>
-                        Heat is not spread evenly across the country. Northern Penang, Perlis and Kedah run warmest. Highland Pahang and East Malaysia stay a little cooler. This map shows each state's average over thirty years. Darker shades mark the hotter regions.
-                    </p>
+            </section>
+        
+            <!-- Dot map: full width -->
+            <section class="card">
+                <div>
+                    <h2 class="chart-heading">Weather Stations Across Malaysia</h2>
+                    <p>Bigger circles mean longer records.</p>
+                    <p>Every station sits near sea level.</p>
                 </div>
-            </div>
-
-            <!-- 7. Proportional symbol map -->
-            <div class="card-row reverse">
-                <div id="symbol_map" class="vis-container"></div>
-                <div class="text-container">
-                    <h2>How Warm Our Cities Run</h2>
-                    <p>
-                        Now we zoom from states down to cities. Each circle sits on a real weather station. Bigger, redder circles mark the hottest surroundings. George Town and Kangar lead the pack. City dwellers feel this warmth every single day.
-                    </p>
-                </div>
-            </div>
-
-            <!-- 8. Dot map: stations -->
-            <div class="card-row">
                 <div id="dot_map" class="vis-container"></div>
+            </section>
+
+            <!-- Dumbbell: text left, chart right -->
+            <section class="card card-row text-first">
                 <div class="text-container">
-                    <h2>Which Cities Run Hot or Cool</h2>
-                    <p>
-                        Not every city feels the heat equally. Each dot is a real weather station. Red dots run hotter than the national average. Blue dots sit a little cooler. George Town and Kangar are the clear hotspots.
-                    </p>
+                    <h2 class="chart-heading">Every State Is Warmer</h2>
+                    <p>Blue dots show averages from 1951 to 1980.</p>
+                    <p>Orange dots show averages from 1996 to 2025.</p>
+                    <p>Each state warmed by 0.7 to 1.3°C.</p>
+                    <p>Kuala Lumpur warmed the most.</p>
                 </div>
+                <div id="dumbbell_chart" class="vis-container"></div>
+            </section>
+
+
+            <!-- ================= ACT 3: WHAT IT MEANS ================= -->
+            <div class="section-header">
+                <span class="section-title">What It Means</span>
             </div>
 
-            <!-- 9. Lollipop: warmest years -->
-            <div class="card-row reverse">
-                <div id="lollipop_chart" class="vis-container"></div>
-                <div class="text-container">
-                    <p class="section-label">Part 4 — Why It Is Happening</p>
-                    <h2>Our Hottest Years Are Recent</h2>
-                    <p>
-                        Which years broke the records? Nine of the ten warmest fell after 2015. The year 2024 stands far above the rest. The pattern is clear and recent. The heat is not a distant threat anymore.
-                    </p>
+            <!-- Heatmap: full width, text above -->
+            <section class="card">
+                <div class="card-intro">
+                    <h2 class="chart-heading">Malaysia's Rain Is Shifting</h2>
+                    <p>Each square is one month of rain.</p>
+                    <p>Brown months were drier than usual. Purple months were wetter.</p>
+                    <p>A 1998 drought left months far drier than usual.</p>
+                    <p>Since 2020, months have been wetter on average.</p>
                 </div>
-            </div>
+                <div id="heatmap_chart" class="vis-container"></div>
+            </section>
 
-            <!-- 10. Stream graph: GHG by gas -->
-            <div class="card-row">
-                <div id="stream_chart" class="vis-container"></div>
-                <div class="text-container">
-                    <h2>Five Decades of Emissions</h2>
-                    <p>
-                        What fuels this warming at home? This stream shows our greenhouse gases over time. The band swells enormously from 1970 onward. Carbon dioxide is by far the largest driver. Our emissions have grown fourfold in fifty years.
-                    </p>
+            <!-- Waffle and bar: side by side -->
+            <section class="card card-pair">
+                <div class="pair-col">
+                    <div>
+                        <h2 class="chart-heading">Glaciers Are Disappearing</h2>
+                        <p>Melting ice raises sea levels worldwide.</p>
+                        <p>Malaysia has long coasts and low coastal cities.</p>
+                    </div>
+                    <div id="waffle_chart" class="vis-container"></div>
                 </div>
-            </div>
-
-            <!-- 11. Alluvial: emission flows -->
-            <div class="card-row reverse">
-                <div id="alluvial_chart" class="vis-container"></div>
-                <div class="text-container">
-                    <h2>Tracing the Flow of Carbon</h2>
-                    <p>
-                        Where do these gases actually come from? This diagram traces activities into broad sectors. Hover a band to follow its path. The energy sector absorbs the thickest flows. Electricity and transport are the leading sources.
-                    </p>
+                <div class="pair-col">
+                    <div>
+                        <h2 class="chart-heading">Heat Makes People Ill</h2>
+                        <p>Heat exhaustion is the most reported illness.</p>
+                        <p>Heat stroke is rarer but far more dangerous.</p>
+                    </div>
+                    <div id="bar_chart" class="vis-container"></div>
                 </div>
+            </section>
+        </main>
+
+
+        <footer class="footer-container">
+            <div class="footer-content">
+                <p><strong>Author:</strong> Tan Yi Yi 34478035</p>
+                <p><strong>Date:</strong> 21 October 2026 | FIT3179 Data Visualisation 2, Monash University</p>
+                <p><strong>Data Sources:</strong>
+                    <a href="https://data.gov.my" target="_blank" rel="noopener">data.gov.my</a> |
+                    <a href="https://www.met.gov.my" target="_blank" rel="noopener">Malaysian Meteorological Department (METMalaysia)</a> |
+                    <a href="https://ourworldindata.org/co2-emissions" target="_blank" rel="noopener">Our World in Data (CO₂ Emissions)</a> |
+                    <a href="https://berkeleyearth.org" target="_blank" rel="noopener">Berkeley Earth Climate Data</a>
+                </p>
+                <p class="ai-declaration">
+                    <strong>Declaration:</strong> Generative AI helped check sentence length and improve layout, as Monash University Learn HQ guidelines require.
+                </p>
             </div>
+        </footer>
 
-            <!-- 12. Waffle: emissions by sector -->
-            <div class="card-row">
-                <div id="waffle_chart" class="vis-container"></div>
-                <div class="text-container">
-                    <h2>Where Our Emissions Come From</h2>
-                    <p>
-                        Each square below equals one percent of emissions. Energy alone fills nearly four fifths of the grid. Industry, waste and farming share the rest. To cool our future, we must target energy first. The chart makes that priority obvious.
-                    </p>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Metadata & Sources -->
-        <div class="footer">
-            Author: Tan Yi Yi 
-            Authored Date: 15 October 2026
-
-            <p><strong>Data sources.</strong></p>
-            <ul>
-                <li>Annual and decade anomalies — Our World in Data, based on Copernicus ERA5. <a href="https://ourworldindata.org/grapher/annual-temperature-anomalies">ourworldindata.org</a></li>
-                <li>Monthly and state temperatures — World Bank Climate Change Knowledge Portal (ERA5). <a href="https://climateknowledgeportal.worldbank.org/country/malaysia">climateknowledgeportal.worldbank.org</a></li>
-                <li>Greenhouse gas emissions — Climate Watch and Malaysia's national GHG inventory. <a href="https://www.climatewatchdata.org/">climatewatchdata.org</a></li>
-                <li>Global CO₂ and population — Our World in Data and the Global Carbon Project. <a href="https://ourworldindata.org/co2-emissions">ourworldindata.org</a></li>
-            </ul>
-        </div>
     </div>
 
-    <!-- Draw the charts -->
-    <script>
-        const charts = [
-            ['#interactive_scatterplot', 'js/scatter_plot_interactive.vg.json'],
-            ['#diverging_chart',        'js/diverging_anomaly.vg.json'],
-            ['#connected_dot_chart',    'js/connected_dot.vg.json'],
-            ['#heatmap_map',            'js/adv_heatmap.vg.json'],
-            ['#radial_chart',           'js/radial_seasonality.vg.json'],
-            ['#choropleth_map',         'js/map_choropleth.vg.json'],
-            ['#symbol_map',             'js/map_symbol.vg.json'],
-            ['#dot_map',                'js/map_dot.vg.json'],
-            ['#lollipop_chart',         'js/lollipop.vg.json'],
-            ['#stream_chart',           'js/stream_ghg.vg.json'],
-            ['#alluvial_chart',         'js/alluvial_chart.vg.json'],
-            ['#waffle_chart',           'js/waffle_chart.vg.json']
-        ];
-        charts.forEach(([el, spec]) => vegaEmbed(el, spec, { renderer: 'svg' }).catch(console.error));
+    <!-- Vega embedding -->
+     <script>
+            var map_spec1 = "js/waffle_chart.vg.json";
+            var map_spec2 = "js/radial_chart.vg.json";
+            var map_spec3 = "js/lollipop_chart.vg.json";
+            var map_spec4 = "js/symbol_map.vg.json";
+            var map_spec5 = "js/choropleth_map.vg.json";
+            var map_spec6 = "js/dot_map.vg.json";
+            var map_spec7 = "js/dumbbell_chart.vg.json";
+            var map_spec8 = "js/heatmap_chart.vg.json";
+            var map_spec9 = "js/area_chart.vg.json";
+            var map_spec10 = "js/donut_chart.vg.json";
+            var map_spec11 = "js/bar_chart.vg.json";
+
+            vegaEmbed('#waffle_chart', map_spec1, { actions: false }).catch(console.error);
+            vegaEmbed('#radial_chart', map_spec2, { actions: false }).catch(console.error);
+            vegaEmbed('#lollipop_chart', map_spec3, { actions: false }).catch(console.error);
+            vegaEmbed('#symbol_map', map_spec4, { actions: false }).catch(console.error);
+            vegaEmbed('#choropleth_map', map_spec5, { actions: false }).catch(console.error);
+            vegaEmbed('#dot_map', map_spec6, { actions: false }).catch(console.error);
+            vegaEmbed('#dumbbell_chart', map_spec7, { actions: false }).catch(console.error);
+            vegaEmbed('#heatmap_chart', map_spec8, { actions: false }).catch(console.error);
+            vegaEmbed('#area_chart', map_spec9, { actions: false }).catch(console.error);
+            vegaEmbed('#donut_chart', map_spec10, { actions: false }).catch(console.error);
+            vegaEmbed('#bar_chart', map_spec11, { actions: false }).catch(console.error);
     </script>
 </body>
 </html>

@@ -1,0 +1,247 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Choropleth map of average yearly temperature by Malaysian state. A slider picks the year.",
+  "width": "container",
+  "height": 450,
+  "background": "transparent",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "padding": {
+    "left": 4,
+    "right": 4,
+    "top": 4,
+    "bottom": 50
+  },
+  "data": {
+    "url": "data/malaysia_temperature_long.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "params": [
+    {
+      "name": "SelectedYear",
+      "value": 2025,
+      "bind": {
+        "input": "range",
+        "min": 1950,
+        "max": 2025,
+        "step": 1,
+        "name": "Year"
+      }
+    }
+  ],
+  "transform": [
+    {
+      "filter": "datum.year == SelectedYear"
+    },
+    {
+      "calculate": "datum.name === 'Pulau Pinang' ? 'Penang' : datum.name",
+      "as": "map_name"
+    }
+  ],
+  "projection": {
+    "type": "mercator",
+    "scale": 2800,
+    "center": [
+      108.5,
+      4.2
+    ]
+  },
+  "layer": [
+    {
+      "description": "States coloured by temperature",
+      "transform": [
+        {
+          "lookup": "map_name",
+          "from": {
+            "data": {
+              "url": "data/malaysia.topojson",
+              "format": {
+                "type": "topojson",
+                "feature": "states"
+              }
+            },
+            "key": "properties.Name"
+          },
+          "as": "geo"
+        }
+      ],
+      "params": [
+        {
+          "name": "hover",
+          "select": {
+            "type": "point",
+            "on": "mouseover",
+            "clear": "mouseout",
+            "fields": [
+              "name"
+            ]
+          }
+        }
+      ],
+      "mark": {
+        "type": "geoshape"
+      },
+      "encoding": {
+        "shape": {
+          "field": "geo",
+          "type": "geojson"
+        },
+        "color": {
+          "condition": {
+            "param": "hover",
+            "empty": true,
+            "field": "temperature_c",
+            "type": "quantitative",
+            "title": "Average temperature (°C)",
+            "scale": {
+              "scheme": "oranges",
+              "domain": [
+                24,
+                28.5
+              ]
+            },
+            "legend": {
+              "orient": "top-right",
+              "direction": "vertical",
+              "gradientLength": 160,
+              "format": ".1f"
+            }
+          },
+          "value": "#e0e0e0"
+        },
+        "stroke": {
+          "value": "#ffffff"
+        },
+        "strokeWidth": {
+          "value": 0.8
+        },
+        "tooltip": [
+          {
+            "field": "name",
+            "type": "nominal",
+            "title": "State"
+          },
+          {
+            "field": "year",
+            "type": "ordinal",
+            "title": "Year"
+          },
+          {
+            "field": "temperature_c",
+            "type": "quantitative",
+            "title": "Average temperature (°C)",
+            "format": ".2f"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Callout line 1: warmest state this year",
+      "transform": [
+        {
+          "window": [
+            {
+              "op": "rank",
+              "as": "rnk"
+            }
+          ],
+          "sort": [
+            {
+              "field": "temperature_c",
+              "order": "descending"
+            }
+          ]
+        },
+        {
+          "filter": "datum.rnk === 1"
+        },
+        {
+          "calculate": "'Warmest State:'",
+          "as": "line1"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 14,
+        "fontWeight": "bold",
+        "color": "#c44d00",
+        "align": "left",
+        "baseline": "bottom",
+        "dy": -2
+      },
+      "encoding": {
+        "longitude": {
+          "datum": 103.5
+        },
+        "latitude": {
+          "datum": 7.0
+        },
+        "text": {
+          "field": "line1",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Callout line 2: name and temperature",
+      "transform": [
+        {
+          "window": [
+            {
+              "op": "rank",
+              "as": "rnk"
+            }
+          ],
+          "sort": [
+            {
+              "field": "temperature_c",
+              "order": "descending"
+            }
+          ]
+        },
+        {
+          "filter": "datum.rnk === 1"
+        },
+        {
+          "calculate": "datum.name + ' (' + format(datum.temperature_c, '.1f') + '°C)'",
+          "as": "line2"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 13,
+        "color": "#5a2d00",
+        "align": "left",
+        "baseline": "top",
+        "dy": 2
+      },
+      "encoding": {
+        "longitude": {
+          "datum": 103.5
+        },
+        "latitude": {
+          "datum": 7.0
+        },
+        "text": {
+          "field": "line2",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Plus Jakarta Sans",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "legend": {
+      "titleFontSize": 11,
+      "labelFontSize": 10
+    }
+  }
+}

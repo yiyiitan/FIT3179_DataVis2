@@ -1,0 +1,302 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Dumbbell chart comparing each state's average temperature in 1951 to 1980 with 1996 to 2025.",
+  "width": "container",
+  "height": 420,
+  "background": "transparent",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "data": {
+    "url": "data/malaysia_temperature_long.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.year >= 1951 && datum.year <= 1980 ? 'then' : (datum.year >= 1996 && datum.year <= 2025 ? 'now' : null)",
+      "as": "period"
+    },
+    {
+      "filter": "datum.period != null"
+    },
+    {
+      "aggregate": [
+        {
+          "op": "mean",
+          "field": "temperature_c",
+          "as": "avg_temp"
+        }
+      ],
+      "groupby": ["name", "period"]
+    },
+    {
+      "pivot": "period",
+      "value": "avg_temp",
+      "groupby": ["name"]
+    },
+    {
+      "calculate": "datum.now - datum.then",
+      "as": "rise"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "name",
+      "type": "nominal",
+      "title": null,
+      "sort": [
+        "Pulau Pinang",
+        "Labuan",
+        "Perlis",
+        "Melaka",
+        "Selangor",
+        "Kedah",
+        "Johor",
+        "Negeri Sembilan",
+        "Pahang",
+        "Kuala Lumpur",
+        "Terengganu",
+        "Perak",
+        "Sabah",
+        "Kelantan",
+        "Sarawak"
+      ],
+      "axis": {
+        "labelFontSize": 11,
+        "ticks": false,
+        "domain": false
+      }
+    }
+  },
+  "layer": [
+    {
+      "description": "Connecting bar",
+      "mark": {
+        "type": "rule",
+        "color": "#c4bdb5",
+        "strokeWidth": 3
+      },
+      "encoding": {
+        "x": {
+          "field": "then",
+          "type": "quantitative",
+          "scale": {
+            "zero": false,
+            "domain": [23.8, 28.4]
+          },
+          "title": "Average yearly temperature (°C)",
+          "axis": {
+            "grid": true,
+            "gridDash": [3, 3],
+            "gridColor": "#d9d2c5",
+            "values": [24, 25, 26, 27, 28],
+            "format": "d"
+          }
+        },
+        "x2": {
+          "field": "now"
+        }
+      }
+    },
+    {
+      "description": "Earlier period dots",
+      "transform": [
+        {
+          "calculate": "'1951–1980'",
+          "as": "period_label"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "size": 95,
+        "filled": true,
+        "opacity": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "then",
+          "type": "quantitative"
+        },
+        "color": {
+          "field": "period_label",
+          "type": "nominal",
+          "title": null,
+          "scale": {
+            "domain": ["1951–1980", "1996–2025"],
+            "range": ["#0072b2", "#d55e00"]
+          },
+          "legend": {
+            "orient": "top",
+            "direction": "horizontal"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "name",
+            "title": "State"
+          },
+          {
+            "field": "then",
+            "title": "1951–1980 average (°C)",
+            "format": ".2f"
+          },
+          {
+            "field": "now",
+            "title": "1996–2025 average (°C)",
+            "format": ".2f"
+          },
+          {
+            "field": "rise",
+            "title": "Rise (°C)",
+            "format": "+.2f"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Recent period dots",
+      "transform": [
+        {
+          "calculate": "'1996–2025'",
+          "as": "period_label"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "size": 95,
+        "filled": true,
+        "opacity": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "now",
+          "type": "quantitative"
+        },
+        "color": {
+          "field": "period_label",
+          "type": "nominal",
+          "title": null,
+          "scale": {
+            "domain": ["1951–1980", "1996–2025"],
+            "range": ["#0072b2", "#d55e00"]
+          },
+          "legend": {
+            "orient": "top",
+            "direction": "horizontal"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "name",
+            "title": "State"
+          },
+          {
+            "field": "then",
+            "title": "1951–1980 average (°C)",
+            "format": ".2f"
+          },
+          {
+            "field": "now",
+            "title": "1996–2025 average (°C)",
+            "format": ".2f"
+          },
+          {
+            "field": "rise",
+            "title": "Rise (°C)",
+            "format": "+.2f"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Callout beside Kuala Lumpur, in empty space",
+      "data": {
+        "values": [
+          {
+            "name": "Kuala Lumpur",
+            "x": 26.5,
+            "label": "Biggest rise: +1.3°C"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "fontSize": 10.5,
+        "fontWeight": "bold",
+        "color": "#5a2d00"
+      },
+      "encoding": {
+        "y": {
+          "field": "name",
+          "type": "nominal"
+        },
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "scale": {
+            "domain": [23.8, 28.4]
+          }
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Callout beside Perlis, in empty space",
+      "data": {
+        "values": [
+          {
+            "name": "Perlis",
+            "x": 24.0,
+            "label": "Every state warmed by 0.7 to 1.3°C"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "fontSize": 10.5,
+        "fontWeight": "bold",
+        "color": "#5a2d00"
+      },
+      "encoding": {
+        "y": {
+          "field": "name",
+          "type": "nominal"
+        },
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "scale": {
+            "domain": [23.8, 28.4]
+          }
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Plus Jakarta Sans",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFontSize": 11,
+      "titleFontSize": 11
+    },
+    "legend": {
+      "labelFontSize": 11
+    }
+  }
+}
