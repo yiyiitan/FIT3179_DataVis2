@@ -35,7 +35,7 @@
       "type": "nominal",
       "scale": {
         "domain": ["Lost by 2100", "Still there in 2100"],
-        "range": ["#ddd6c8", "#a7d3ea"]
+        "range": ["#163A5F", "#8EC8E8"]
       },
       "legend": {
         "title": "Each square = 1 in every 100 glaciers",
