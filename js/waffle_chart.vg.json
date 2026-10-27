@@ -2,82 +2,69 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": 300,
   "height": 300,
-  "padding": {
-    "left": 4,
-    "right": 4,
-    "top": 4,
-    "bottom": 10
-  },
+  "padding": { "left": 4, "right": 4, "top": 4, "bottom": 10 },
   "background": "transparent",
-  "data": {
-    "url": "data/glacier_vanish_waffle.csv",
-    "format": {
-      "type": "csv",
-      "parse": {
-        "x": "number",
-        "y": "number"
-      }
+
+  "data": { "sequence": { "start": 0, "stop": 100, "as": "i" } },
+
+  "transform": [
+    { "calculate": "datum.i % 10", "as": "col" },
+    { "calculate": "floor(datum.i / 10)", "as": "row" },
+    {
+      "calculate": "datum.i < 67 ? 'Lost by 2100' : 'Still there in 2100'",
+      "as": "Category"
+    },
+    {
+      "calculate": "datum.i < 67 ? 'Projected to disappear by 2100' : 'Projected to survive to 2100'",
+      "as": "Outcome"
     }
-  },
+  ],
+
   "mark": {
     "type": "rect",
     "cornerRadius": 3,
     "stroke": "#fbf8f2",
-    "strokeWidth": 1
+    "strokeWidth": 1.5
   },
+
   "encoding": {
-    "x": {
-      "field": "x",
-      "type": "ordinal",
-      "axis": null,
-      "sort": "ascending"
-    },
-    "y": {
-      "field": "y",
-      "type": "ordinal",
-      "axis": null,
-      "sort": "ascending"
-    },
+    "x": { "field": "col", "type": "ordinal", "axis": null },
+    "y": { "field": "row", "type": "ordinal", "axis": null, "sort": "ascending" },
     "color": {
       "field": "Category",
       "type": "nominal",
       "scale": {
-        "domain": [
-          "Projected to vanish",
-          "Not projected to vanish"
-        ],
-        "range": [
-          "#2f8fc9",
-          "#ddd6c8"
-        ]
+        "domain": ["Lost by 2100", "Still there in 2100"],
+        "range": ["#ddd6c8", "#a7d3ea"]
       },
       "legend": {
-        "title": null,
+        "title": "Each square = 1 in every 100 glaciers",
+        "titleFontSize": 12,
+        "titleFontWeight": 600,
+        "titleColor": "#3a3a3a",
+        "titlePadding": 8,
+        "titleLimit": 300,
         "labelFontSize": 12,
-        "labelLimit": 240,
+        "labelColor": "#3a3a3a",
+        "labelLimit": 260,
         "orient": "bottom",
         "direction": "horizontal",
         "symbolType": "square",
-        "offset": 12
+        "symbolSize": 160,
+        "symbolStrokeWidth": 0,
+        "columnPadding": 18,
+        "offset": 14
       }
     },
     "tooltip": [
-      {
-        "field": "Category",
-        "type": "nominal",
-        "title": "Glaciers"
-      }
+      { "field": "Outcome", "type": "nominal", "title": "This glacier" }
     ]
   },
+
   "config": {
     "font": "Inter, sans-serif",
     "background": "transparent",
-    "view": {
-      "stroke": "transparent"
-    },
-    "scale": {
-      "bandPaddingInner": 0.12,
-      "bandPaddingOuter": 0.02
-    }
+    "view": { "stroke": "transparent" },
+    "scale": { "bandPaddingInner": 0.1, "bandPaddingOuter": 0.02 }
   }
 }
