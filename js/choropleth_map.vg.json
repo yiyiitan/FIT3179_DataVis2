@@ -1,6 +1,5 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Choropleth map of average yearly temperature by Malaysian state. A slider picks the year.",
   "width": "container",
   "height": 450,
   "background": "transparent",
@@ -44,7 +43,9 @@
   ],
   "projection": {
     "type": "mercator",
-    "scale": 2800,
+    "scale": {
+      "expr": "min(width, 1000) * 2.8"
+    },
     "center": [
       108.5,
       4.2
@@ -98,17 +99,28 @@
             "type": "quantitative",
             "title": "Average temperature (°C)",
             "scale": {
-              "scheme": "oranges",
+              "type": "threshold",
               "domain": [
-                24,
-                28.5
+                24.5,
+                25.5,
+                26.5,
+                27.5
+              ],
+              "range": [
+                "#f2f0f7",
+                "#cbc9e2",
+                "#9e9ac8",
+                "#756bb1",
+                "#54278f"
               ]
             },
             "legend": {
               "orient": "top-right",
               "direction": "vertical",
-              "gradientLength": 160,
-              "format": ".1f"
+              "symbolType": "square",
+              "symbolSize": 180,
+              "titleFontSize": 12,
+              "labelFontSize": 12
             }
           },
           "value": "#e0e0e0"
@@ -160,7 +172,7 @@
           "filter": "datum.rnk === 1"
         },
         {
-          "calculate": "'Warmest State:'",
+          "calculate": "'Warmest state in ' + datum.year + ':'",
           "as": "line1"
         }
       ],
@@ -234,14 +246,14 @@
     }
   ],
   "config": {
-    "font": "Plus Jakarta Sans",
+    "font": "Inter, sans-serif",
     "background": "transparent",
     "view": {
       "stroke": null
     },
     "legend": {
-      "titleFontSize": 11,
-      "labelFontSize": 10
+      "titleFontSize": 12,
+      "labelFontSize": 12
     }
   }
 }

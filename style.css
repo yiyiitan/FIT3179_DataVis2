@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap');
 
 * {
     box-sizing: border-box;
@@ -7,7 +7,7 @@
 }
 
 body {
-    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: #ede5db;
     color: #262220;
     line-height: 1.55;
@@ -45,11 +45,11 @@ body {
     background: linear-gradient(90deg, #0072b2, #56b4e9, #f6ae2d, #d55e00, #a4133c);
 }
 
-.header-container h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 2.50rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
     color: #171412;
     margin-bottom: 6px;
 }
@@ -61,39 +61,6 @@ body {
     margin-bottom: 20px;
 }
 
-.stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-}
-
-.stat {
-    border-top: 3px solid #d55e00;
-    padding-top: 10px;
-}
-
-.stat:nth-child(2) {
-    border-top-color: #4d4d4d;
-}
-
-.stat:nth-child(3) {
-    border-top-color: #48cae4;
-}
-
-.stat-number {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 2.1rem;
-    font-weight: 800;
-    line-height: 1.1;
-    color: #171412;
-}
-
-.stat-label {
-    font-size: 0.88rem;
-    color: #4a423b;
-    margin: 0;
-}
-
 /* ---------------- SECTION HEADERS ---------------- */
 .section-header {
     display: flex;
@@ -103,22 +70,21 @@ body {
     border: 1px solid #d4c8b6;
     border-radius: 12px;
     padding: 12px 20px;
-    margin: 24px 0 4px 0;
+    margin: 0;
     gap: 16px;
     break-after: avoid;
     page-break-after: avoid;
 }
 
 .section-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.80rem;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 2.5rem;
     font-weight: 700;
     color: #1c1917;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
 }
 
-/* ---------------- CARDS ---------------- */
+/* ---------------- CARDS & LAYOUTS ---------------- */
 .card-stack {
     display: flex;
     flex-direction: column;
@@ -128,50 +94,136 @@ body {
 .card {
     background: #fbf8f2;
     border-radius: 14px;
-    padding: 22px;
+    padding: 28px 24px;
     border: 1px solid #ddd3c4;
     box-shadow: 0 3px 12px rgba(38, 34, 32, 0.03);
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     overflow: hidden;
     break-inside: avoid;
     page-break-inside: avoid;
 }
 
-/* Chart on one side, text on the other. Small, even gap. */
+/* Flex layout tightly binds charts with their direct headings */
+.chart-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.text-wrapper {
+    width: 100%;
+    text-align: center;
+}
+
+/* Split content layouts */
 .card-row {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
     align-items: center;
-    gap: 20px;
+    gap: 24px;
 }
 
-/* Text first, wide chart second (dumbbell) */
+/* Text First layout (Used for Radial Chart) */
 .card-row.text-first {
-    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.5fr);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
 }
 
-/* Two charts sharing one container */
+/* Chart First layout (Used for Dumbbell Chart) */
+.card-row.chart-first {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+}
+
+/* ---------------- DUMBBELL CHART TEXT ---------------- */
+.card-row.chart-first .text-wrapper {
+    width: 100%;
+    max-width: 38ch;
+    justify-self: left;
+    margin-left: 10px;
+    padding: 0 8px;
+}
+
+/* ---------------- RADIAL CHART TEXT ---------------- */
+.card-row.text-first > .text-wrapper {
+    width: 100%;
+    max-width: 38ch;
+    justify-self: start;
+    align-self: center;
+    margin: 0;
+    padding: 0 8px;
+}
+
+.card-row.text-first > .text-wrapper p {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 150px;
+    margin-right: 0;
+    text-align: justify;
+    text-align-last: center;
+}
+
 .card-pair {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0;
-    align-items: start;
+    align-items: stretch;
+    padding: 0;
 }
 
 .pair-col {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    padding: 28px 24px;
 }
 
-.pair-col:first-child {
-    padding-right: 24px;
+.card-pair .pair-col {
+    display: grid;
+    grid-template-rows: 390px minmax(0, 1fr);
+    align-content: start;
+}
+
+.card-pair .chart-wrapper {
+    display: grid;
+    grid-template-rows: auto 340px;
+    align-content: start;
+    height: 390px;
+}
+
+.card-pair .vis-container {
+    height: 340px;
+    align-items: flex-start;
+}
+
+.card-pair .text-wrapper {
+    align-self: start;
 }
 
 .pair-col + .pair-col {
     border-left: 1px solid #e3d9c9;
-    padding-left: 24px;
+}
+
+/* Add a small gap between charts and paragraphs below them */
+.chart-wrapper + .text-wrapper {
+    margin-top: 20px;
+}
+
+.chart-wrapper p {
+    margin-top: 8px;
+}
+
+.chart-note {
+    max-width: 62ch;
+    margin-top: 10px;
+    margin-bottom: 0;
+    color: #6f655c;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    text-align: center;
+    text-align-last: center;
 }
 
 /* ---------------- VEGA CONTAINERS ---------------- */
@@ -198,17 +250,6 @@ body {
     max-width: 100%;
 }
 
-.text-container {
-    min-width: 0;
-}
-
-.card-intro {
-    margin: 0 auto 8px auto;
-    max-width: 760px;
-    width: 100%;
-    text-align: center;
-}
-
 /* Keep the area chart centred inside its column */
 #area_chart {
     display: flex;
@@ -224,31 +265,80 @@ body {
     margin: 0 auto;
 }
 
-#area_chart .vega-embed > div {
-    max-width: 100%;
+/* ---------------- WAFFLE CHART ---------------- */
+#waffle_chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
-/* ---------------- TYPOGRAPHY ---------------- */
+#waffle_chart .vega-embed {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important; 
+}
 
+/* Force the actual canvas/SVG to be centered within the embed wrapper */
+#waffle_chart canvas, 
+#waffle_chart svg {
+    margin: 0 auto !important;
+    display: block !important;
+}
+
+
+/* ---------------- TYPOGRAPHY ---------------- */
 h2.chart-heading {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Playfair Display', serif;
     font-size: 1.25rem;
     font-weight: 700;
     color: #171412;
-    margin-bottom: 8px;
-    line-height: 1.25;
+    margin-bottom: 12px;
+    line-height: 1.35;
     text-align: center;
 }
 
+/* Formatting for perfectly justified block-centered text paragraphs, limited to roughly 10-12 words per physical line max */
 p {
+    font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
     color: #3b3530;
     line-height: 1.6;
     margin-bottom: 8px;
+    text-align: justify;
+    text-align-last: center;
+    max-width: 50ch; /* Enforces line restriction limit */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 p:last-child {
     margin-bottom: 0;
+}
+
+.text-wrapper strong {
+    font-weight: 700;
+}
+
+.emphasis-global {
+    color: #8a4b08;
+}
+
+.emphasis-warm {
+    color: #9a3f68;
+}
+
+.emphasis-evidence {
+    color: #176b87;
+}
+
+.emphasis-rain {
+    color: #6b4c9a;
+}
+
+.emphasis-impact {
+    color: #a34a78;
 }
 
 /* Slider */
@@ -266,57 +356,6 @@ p:last-child {
     width: 160px;
 }
 
-/* ---------------- CLOSING TAKEAWAY ---------------- */
-.takeaway {
-    background: #2b2420;
-    border-color: #2b2420;
-}
-
-.takeaway h3.chart-kicker {
-    color: #f6ae2d;
-}
-
-.takeaway h2.chart-heading {
-    color: #fbf8f2;
-}
-
-.takeaway-list {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px 24px;
-    margin-top: 8px;
-}
-
-.takeaway-list li {
-    color: #efe7da;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    padding-left: 14px;
-    border-left: 3px solid #d55e00;
-}
-
-/* ---------------- ABOUT BLOCK ---------------- */
-.about-grid {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 16px;
-    margin-top: 8px;
-}
-
-.about-item h4 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #b34700;
-    margin-bottom: 4px;
-}
-
-.about-item p {
-    font-size: 0.88rem;
-}
-
 /* ---------------- FOOTER ---------------- */
 .footer-container {
     margin-top: 24px;
@@ -327,6 +366,7 @@ p:last-child {
     color: #5f574f;
     border: 1px solid #ddd3c4;
     border-top: 3px solid #b34700;
+    text-align: left;
     break-inside: avoid;
     page-break-inside: avoid;
 }
@@ -334,11 +374,18 @@ p:last-child {
 .footer-container p {
     font-size: 0.82rem;
     color: #5f574f;
+    text-align: left;
+    text-align-last: left;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .footer-content {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
     gap: 4px;
 }
 
@@ -356,6 +403,18 @@ p:last-child {
     margin-top: 6px;
     font-style: italic;
     color: #6f655c;
+    text-align: left;
+}
+
+.impact-callout {
+    max-width: 46ch;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-left: 4px solid #a34a78;
+    background: #f5eaf0;
+    color: #7d3159;
+    text-align: left;
+    text-align-last: left;
 }
 
 /* ---------------- PRINT ---------------- */
@@ -373,6 +432,18 @@ p:last-child {
         break-inside: avoid;
         page-break-inside: avoid;
     }
+
+    .print-page-start {
+        break-before: page;
+        page-break-before: always;
+    }
+
+    .print-keep-together,
+    .print-keep-together .chart-wrapper,
+    .print-keep-together .text-wrapper {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
 }
 
 /* ---------------- RESPONSIVE ---------------- */
@@ -382,20 +453,32 @@ p:last-child {
         gap: 16px;
     }
 
-    .pair-col:first-child {
-        padding-right: 0;
+    .pair-col {
+        padding: 24px;
+    }
+
+    .card-pair .pair-col {
+        grid-template-rows: 370px minmax(0, 1fr);
+    }
+
+    .card-pair .chart-wrapper {
+        grid-template-rows: auto 320px;
+        height: 370px;
+    }
+
+    .card-pair .vis-container {
+        height: 320px;
     }
 
     .pair-col + .pair-col {
         border-left: none;
-        padding-left: 0;
         border-top: 1px solid #e3d9c9;
-        padding-top: 16px;
+    }
+    
+    .card-row, .card-row.text-first, .card-row.chart-first {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
-
-
-
 
 /* ---------------- CHOROPLETH YEAR SLIDER ---------------- */
 #choropleth_map {
@@ -407,21 +490,18 @@ p:last-child {
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(5px);
     padding: 10px 25px;
     border-radius: 40px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(0, 0, 0, 0.05);
-
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Layout of the slider controls */
 #choropleth_map .vega-bind {
     display: flex;
     align-items: center;
@@ -430,7 +510,6 @@ p:last-child {
     white-space: nowrap;
 }
 
-/* Year label */
 #choropleth_map .vega-bind-name {
     font-weight: 700;
     color: #c44d00;
@@ -442,48 +521,37 @@ p:last-child {
     white-space: nowrap;
 }
 
-/* Slider track */
 #choropleth_map input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
-
     width: 250px;
     height: 6px;
     padding: 0;
     margin: 0 24px 0 0;
-
     background: #fde0c5;
     border-radius: 4px;
     outline: none;
     cursor: pointer;
 }
 
-/* Slider thumb — Chrome, Safari and Edge */
 #choropleth_map input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-
     width: 18px;
     height: 18px;
     border-radius: 50%;
-
     background: #d95f02;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-
-    transition:
-        transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        background-color 0.2s;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s;
 }
 
-/* Slider thumb hover effect */
 #choropleth_map input[type="range"]::-webkit-slider-thumb:hover,
 #choropleth_map input[type="range"]:active::-webkit-slider-thumb {
     transform: scale(1.4);
     background: #a64700;
 }
 
-/* Slider thumb — Firefox */
 #choropleth_map input[type="range"]::-moz-range-thumb {
     width: 18px;
     height: 18px;
@@ -494,14 +562,12 @@ p:last-child {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Selected year value */
 #choropleth_map .vega-bind-value,
 #choropleth_map span.vega-bind-value {
     display: inline-block;
     min-width: 45px;
     margin: 0 !important;
     padding: 0;
-
     text-align: right;
     font-weight: 800;
     font-size: 16px;
@@ -509,25 +575,20 @@ p:last-child {
     white-space: nowrap;
 }
 
-/* ---------------- RESPONSIVE SLIDER ---------------- */
-
 @media (max-width: 600px) {
     #choropleth_map .vega-bindings {
         max-width: calc(100% - 16px);
         padding: 8px 12px;
         bottom: 5px;
     }
-
     #choropleth_map .vega-bind-name {
         margin-right: 12px;
         font-size: 12px;
     }
-
     #choropleth_map input[type="range"] {
         width: 140px;
         margin-right: 12px;
     }
-
     #choropleth_map .vega-bind-value,
     #choropleth_map span.vega-bind-value {
         min-width: 38px;
@@ -535,3 +596,65 @@ p:last-child {
     }
 }
 
+/* ---------------- TREEMAP CHART CENTRING ---------------- */
+#treemap_chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+}
+
+#treemap_chart .vega-embed {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100%;
+    margin: 0 auto !important;
+}
+
+#treemap_chart canvas,
+#treemap_chart svg {
+    display: block;
+    margin: 0 auto !important;
+}
+
+/* ---------------- RADIAL CHART TEXT ---------------- */
+.card-row.text-first > .text-wrapper {
+    width: 100%;
+    max-width: 38ch;
+    justify-self: start;
+    align-self: center;
+    margin: 0;
+    padding: 0 8px;
+}
+
+.card-row.text-first > .text-wrapper p {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 150px;
+    margin-right: 0;
+    text-align: justify;
+    text-align-last: center;
+}
+
+/* ---------------- RADIAL CHART POSITION ---------------- */
+.card-row.text-first > .chart-wrapper {
+    align-items: center;
+    padding-right: 30px;
+    box-sizing: border-box;
+}
+
+.card-row.text-first #radial_chart {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-row.text-first #radial_chart .vega-embed {
+    margin: 0;
+    max-width: 100%;
+}
+ 
+ 

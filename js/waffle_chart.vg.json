@@ -1,23 +1,14 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Waffle chart: 67 of 100 squares show the share of the world's glaciers projected to vanish by 2100.",
-  "width": 240,
-  "height": 240,
+  "width": 300,
+  "height": 300,
   "padding": {
     "left": 4,
     "right": 4,
     "top": 4,
-    "bottom": 4
+    "bottom": 10
   },
   "background": "transparent",
-  "title": {
-    "text": "Two in three glaciers may vanish by 2100",
-    "subtitle": "Each square is 1% of the world's glaciers.",
-    "fontSize": 13,
-    "subtitleFontSize": 11,
-    "anchor": "start",
-    "offset": 10
-  },
   "data": {
     "url": "data/glacier_vanish_waffle.csv",
     "format": {
@@ -56,17 +47,18 @@
           "Not projected to vanish"
         ],
         "range": [
-          "#48cae4",
+          "#2f8fc9",
           "#ddd6c8"
         ]
       },
       "legend": {
         "title": null,
-        "labelFontSize": 11,
+        "labelFontSize": 12,
         "labelLimit": 240,
-        "orient": "left",
-        "direction": "vertical",
-        "symbolType": "square"
+        "orient": "bottom",
+        "direction": "horizontal",
+        "symbolType": "square",
+        "offset": 12
       }
     },
     "tooltip": [
@@ -78,7 +70,7 @@
     ]
   },
   "config": {
-    "font": "Plus Jakarta Sans",
+    "font": "Inter, sans-serif",
     "background": "transparent",
     "view": {
       "stroke": "transparent"

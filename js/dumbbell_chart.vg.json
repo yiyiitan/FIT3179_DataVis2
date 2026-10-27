@@ -1,7 +1,5 @@
-
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Dumbbell chart comparing each state's average temperature in 1951 to 1980 with 1996 to 2025.",
   "width": "container",
   "height": 420,
   "background": "transparent",
@@ -31,12 +29,17 @@
           "as": "avg_temp"
         }
       ],
-      "groupby": ["name", "period"]
+      "groupby": [
+        "name",
+        "period"
+      ]
     },
     {
       "pivot": "period",
       "value": "avg_temp",
-      "groupby": ["name"]
+      "groupby": [
+        "name"
+      ]
     },
     {
       "calculate": "datum.now - datum.then",
@@ -47,7 +50,7 @@
     "y": {
       "field": "name",
       "type": "nominal",
-      "title": null,
+      "title": "Malaysian State",
       "sort": [
         "Pulau Pinang",
         "Labuan",
@@ -66,7 +69,7 @@
         "Sarawak"
       ],
       "axis": {
-        "labelFontSize": 11,
+        "labelFontSize": 12,
         "ticks": false,
         "domain": false
       }
@@ -86,21 +89,60 @@
           "type": "quantitative",
           "scale": {
             "zero": false,
-            "domain": [23.8, 28.4]
+            "domain": [
+              23.8,
+              28.4
+            ]
           },
           "title": "Average yearly temperature (°C)",
           "axis": {
             "grid": true,
-            "gridDash": [3, 3],
+            "gridDash": [
+              3,
+              3
+            ],
             "gridColor": "#d9d2c5",
-            "values": [24, 25, 26, 27, 28],
+            "values": [
+              24,
+              25,
+              26,
+              27,
+              28
+            ],
             "format": "d"
           }
         },
         "x2": {
           "field": "now"
+        },
+        "opacity": {
+          "condition": {
+            "param": "hoverState",
+            "value": 1
+          },
+          "value": 0.28
+        },
+        "strokeWidth": {
+          "condition": {
+            "param": "hoverState",
+            "value": 5
+          },
+          "value": 3
         }
-      }
+      },
+      "params": [
+        {
+          "name": "hoverState",
+          "select": {
+            "type": "point",
+            "on": "pointerover",
+            "clear": "pointerout",
+            "fields": [
+              "name"
+            ]
+          }
+        }
+      ]
     },
     {
       "description": "Earlier period dots",
@@ -126,8 +168,14 @@
           "type": "nominal",
           "title": null,
           "scale": {
-            "domain": ["1951–1980", "1996–2025"],
-            "range": ["#0072b2", "#d55e00"]
+            "domain": [
+              "1951–1980",
+              "1996–2025"
+            ],
+            "range": [
+              "#1F06AC",
+              "#F70063"
+            ]
           },
           "legend": {
             "orient": "top",
@@ -154,7 +202,14 @@
             "title": "Rise (°C)",
             "format": "+.2f"
           }
-        ]
+        ],
+        "opacity": {
+          "condition": {
+            "param": "hoverState",
+            "value": 1
+          },
+          "value": 0.28
+        }
       }
     },
     {
@@ -181,8 +236,14 @@
           "type": "nominal",
           "title": null,
           "scale": {
-            "domain": ["1951–1980", "1996–2025"],
-            "range": ["#0072b2", "#d55e00"]
+            "domain": [
+              "1951–1980",
+              "1996–2025"
+            ],
+            "range": [
+              "#0072b2",
+              "#d55e00"
+            ]
           },
           "legend": {
             "orient": "top",
@@ -209,11 +270,18 @@
             "title": "Rise (°C)",
             "format": "+.2f"
           }
-        ]
+        ],
+        "opacity": {
+          "condition": {
+            "param": "hoverState",
+            "value": 1
+          },
+          "value": 0.28
+        }
       }
     },
     {
-      "description": "Callout beside Kuala Lumpur, in empty space",
+      "description": "Callout beside Kuala Lumpur",
       "data": {
         "values": [
           {
@@ -226,7 +294,7 @@
       "mark": {
         "type": "text",
         "align": "left",
-        "fontSize": 10.5,
+        "fontSize": 12,
         "fontWeight": "bold",
         "color": "#5a2d00"
       },
@@ -239,7 +307,10 @@
           "field": "x",
           "type": "quantitative",
           "scale": {
-            "domain": [23.8, 28.4]
+            "domain": [
+              23.8,
+              28.4
+            ]
           }
         },
         "text": {
@@ -249,7 +320,7 @@
       }
     },
     {
-      "description": "Callout beside Perlis, in empty space",
+      "description": "Callout beside Perlis",
       "data": {
         "values": [
           {
@@ -262,7 +333,7 @@
       "mark": {
         "type": "text",
         "align": "left",
-        "fontSize": 10.5,
+        "fontSize": 12,
         "fontWeight": "bold",
         "color": "#5a2d00"
       },
@@ -275,7 +346,10 @@
           "field": "x",
           "type": "quantitative",
           "scale": {
-            "domain": [23.8, 28.4]
+            "domain": [
+              23.8,
+              28.4
+            ]
           }
         },
         "text": {
@@ -286,17 +360,17 @@
     }
   ],
   "config": {
-    "font": "Plus Jakarta Sans",
+    "font": "Inter, sans-serif",
     "background": "transparent",
     "view": {
       "stroke": null
     },
     "axis": {
-      "labelFontSize": 11,
-      "titleFontSize": 11
+      "labelFontSize": 12,
+      "titleFontSize": 12
     },
     "legend": {
-      "labelFontSize": 11
+      "labelFontSize": 12
     }
   }
 }

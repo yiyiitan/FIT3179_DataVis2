@@ -1,0 +1,419 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 520,
+  "height": 320,
+  "padding": {
+    "left": 4,
+    "right": 4,
+    "top": 28,
+    "bottom": 4
+  },
+  "background": "transparent",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "data": [
+    {
+      "name": "table",
+      "url": "data/emissions_by_sector.csv",
+      "format": {
+        "type": "csv",
+        "parse": {
+          "Percentage": "number"
+        }
+      }
+    },
+    {
+      "name": "rootnode",
+      "values": [
+        {
+          "id": "root",
+          "parent": null,
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "categories",
+      "source": "table",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["Category"],
+          "ops": ["sum"],
+          "fields": ["Percentage"],
+          "as": ["cat_total"]
+        },
+        {
+          "type": "formula",
+          "as": "id",
+          "expr": "datum.Category"
+        },
+        {
+          "type": "formula",
+          "as": "parent",
+          "expr": "'root'"
+        },
+        {
+          "type": "formula",
+          "as": "size",
+          "expr": "0"
+        }
+      ]
+    },
+    {
+      "name": "leaves_in",
+      "source": "table",
+      "transform": [
+        {
+          "type": "formula",
+          "as": "id",
+          "expr": "datum.Category + ' > ' + datum.Subcategory"
+        },
+        {
+          "type": "formula",
+          "as": "parent",
+          "expr": "datum.Category"
+        },
+        {
+          "type": "formula",
+          "as": "size",
+          "expr": "datum.Percentage"
+        },
+        {
+          "type": "formula",
+          "as": "name",
+          "expr": "datum.Subcategory"
+        }
+      ]
+    },
+    {
+      "name": "tree",
+      "source": [
+        "rootnode",
+        "categories",
+        "leaves_in"
+      ],
+      "transform": [
+        {
+          "type": "stratify",
+          "key": "id",
+          "parentKey": "parent"
+        },
+        {
+            "type": "treemap",
+            "field": "size",
+            "sort": {
+                "field": "value",
+                "order": "descending"
+            },
+            "method": "squarify",
+            "ratio": 1,
+            "round": true,
+            "paddingInner": 3,
+            "paddingTop": 15,
+            "paddingOuter": 1,
+            "size": [
+                {
+                "signal": "width"
+                },
+                {
+                "signal": "height"
+                }
+            ]
+        }
+      ]
+    },
+    {
+      "name": "leaves",
+      "source": "tree",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "!datum.children"
+        }
+      ]
+    },
+    {
+      "name": "parent_nodes",
+      "source": "tree",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.depth === 1"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "categoryFill",
+      "type": "ordinal",
+      "domain": [
+        "Energy",
+        "Agriculture",
+        "Industry",
+        "Waste"
+      ],
+      "range": [
+        "#2878B5",
+        "#B56576",
+        "#7B2D8E",
+        "#C2A83E"
+      ]
+    }
+  ],
+  "legends": [
+    {
+      "fill": "categoryFill",
+      "orient": "none",
+      "legendX": 0,
+      "legendY": -22,
+      "direction": "horizontal",
+      "symbolType": "square",
+      "symbolSize": 100,
+      "labelFont": "Inter, sans-serif",
+      "labelFontSize": 11,
+      "labelFontWeight": "bold",
+      "labelColor": "#2b2a27",
+      "columnPadding": 16
+    }
+  ],
+  "marks": [
+    {
+      "description": "Outer boundary container for parent categories",
+      "type": "rect",
+      "from": {
+        "data": "parent_nodes"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "field": "x0"
+          },
+          "y": {
+            "field": "y0"
+          },
+          "x2": {
+            "field": "x1"
+          },
+          "y2": {
+            "field": "y1"
+          },
+          "fill": {
+            "value": "#f3ede2"
+          },
+          "stroke": {
+            "scale": "categoryFill",
+            "field": "id"
+          },
+          "strokeWidth": {
+            "value": 1.5
+          },
+          "strokeOpacity": {
+            "value": 0.5
+          }
+        }
+      }
+    },
+    {
+      "description": "Parent category header label with line-wrapping support",
+      "type": "text",
+      "from": {
+        "data": "parent_nodes"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.x0 + 4"
+          },
+          "y": {
+            "signal": "datum.y0 + 2.5"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "lineHeight": {
+            "value": 11
+          },
+          "text": {
+            "signal": "upper(datum.id) + ' (' + format(datum.cat_total || datum.value, '.1f') + '%)'"
+            },
+          "font": {
+            "value": "Inter, sans-serif"
+          },
+          "fontWeight": {
+            "value": "bold"
+          },
+          "fontSize": {
+            "value": 9.5
+          },
+          "fill": {
+            "scale": "categoryFill",
+            "field": "id"
+          },
+          "limit": {
+            "signal": "datum.x1 - datum.x0 - 6"
+          },
+          "opacity": {
+            "signal": "(datum.x1 - datum.x0) > 60 ? 1 : 0"
+          }
+        }
+      }
+    },
+    {
+      "description": "Subcategory leaf rectangles",
+      "type": "rect",
+      "from": {
+        "data": "leaves"
+      },
+      "encode": {
+        "enter": {
+          "stroke": {
+            "value": "#fbf8f2"
+          },
+          "strokeWidth": {
+            "value": 1.5
+          }
+        },
+        "update": {
+          "x": {
+            "field": "x0"
+          },
+          "y": {
+            "field": "y0"
+          },
+          "x2": {
+            "field": "x1"
+          },
+          "y2": {
+            "field": "y1"
+          },
+          "fill": {
+            "scale": "categoryFill",
+            "field": "Category"
+          },
+          "tooltip": {
+            "signal": "{'Subcategory': datum.name, 'Parent Sector': datum.Category, 'Share of world emissions': format(datum.size, '.1f') + '%'}"
+          },
+          "opacity": {
+            "signal": "hoverId === null || hoverId === datum.id ? 1 : 0.35"
+          },
+          "strokeWidth": {
+            "signal": "hoverId === datum.id ? 2.5 : 1.5"
+          }
+        }
+      },
+      "name": "leaf_rects"
+    },
+    {
+      "description": "Subcategory name, multiline",
+      "type": "text",
+      "from": {
+        "data": "leaves"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.x0 + 5"
+          },
+          "y": {
+            "signal": "datum.y0 + 5"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "text": {
+            "signal": "split(datum.name, ' ')"
+          },
+          "font": {
+            "value": "Inter, sans-serif"
+          },
+          "fontWeight": {
+            "value": "bold"
+          },
+          "fontSize": {
+            "signal": "(datum.x1 - datum.x0) < 65 ? 10 : 11.5"
+          },
+          "fill": {
+            "value": "#ffffff"
+          },
+          "limit": {
+            "signal": "datum.x1 - datum.x0 - 8"
+          },
+          "opacity": {
+            "signal": "(datum.x1 - datum.x0) > 30 && (datum.y1 - datum.y0) > 28 ? 1 : 0"
+          }
+        }
+      }
+    },
+    {
+      "description": "Subcategory percentage label",
+      "type": "text",
+      "from": {
+        "data": "leaves"
+      },
+      "encode": {
+        "update": {
+          "x": {
+            "signal": "datum.x0 + 5"
+          },
+          "y": {
+            "signal": "datum.y0 + 6 + (length(split(datum.name, ' ')) * ((datum.x1 - datum.x0) < 65 ? 11.5 : 13))"
+          },
+          "align": {
+            "value": "left"
+          },
+          "baseline": {
+            "value": "top"
+          },
+          "text": {
+            "signal": "format(datum.size, '.1f') + '%'"
+          },
+          "font": {
+            "value": "Inter, sans-serif"
+          },
+          "fontSize": {
+            "signal": "(datum.x1 - datum.x0) < 65 ? 9 : 10.5"
+          },
+          "fillOpacity": {
+            "value": 0.9
+          },
+          "fill": {
+            "value": "#ffffff"
+          },
+          "opacity": {
+            "signal": "(datum.x1 - datum.x0) > 30 && (datum.y1 - datum.y0) > 42 ? 1 : 0"
+          }
+        }
+      }
+    }
+  ],
+  "config": {
+    "font": "Inter, sans-serif",
+    "background": "transparent"
+  },
+  "signals": [
+    {
+      "name": "hoverId",
+      "value": null,
+      "on": [
+        {
+          "events": "@leaf_rects:pointerover",
+          "update": "datum.id"
+        },
+        {
+          "events": "@leaf_rects:pointerout",
+          "update": "null"
+        }
+      ]
+    }
+  ]
+}

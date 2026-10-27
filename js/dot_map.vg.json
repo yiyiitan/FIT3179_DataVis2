@@ -1,23 +1,30 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Dot map of weather stations in Malaysia with station labels.",
   "width": "container",
   "height": 340,
   "background": "transparent",
-  "autosize": {"type": "fit", "contains": "padding"},
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
   "projection": {
     "type": "mercator",
-    "scale": 2500,
-    "center": [109.5, 3.8]
+    "scale": {
+      "expr": "min(width, 1000) * 2.6"
+    },
+    "center": [
+      109.5,
+      3.8
+    ]
   },
   "layer": [
     {
       "description": "Base Map Layer",
       "data": {
-        "url": "data/dot_map.topojson",
+        "url": "data/geoBoundaries-MYS-ADM1.topojson",
         "format": {
           "type": "topojson",
-          "feature": "countries"
+          "feature": "MYSADM1gbOpen"
         }
       },
       "mark": {
@@ -37,7 +44,7 @@
       },
       "mark": {
         "type": "circle",
-        "size": 90,
+        "size": 110,
         "opacity": 0.9,
         "stroke": "#1f2937",
         "strokeWidth": 1
@@ -54,38 +61,67 @@
         "color": {
           "field": "record_span_years",
           "type": "quantitative",
-          "title": "Record Span (Years)",
+          "title": "Years of records",
           "scale": {
-            "scheme": "blues"
+            "range": [
+              "#e6f7f8",
+              "#b8e3e5",
+              "#7acccf",
+              "#3aaeb5",
+              "#167a80"
+            ]
           },
           "legend": {
             "orient": "right",
-            "offset": 5
+            "offset": 5,
+            "titleFontSize": 12,
+            "labelFontSize": 12
           }
         },
         "tooltip": [
-          {"field": "station_name", "type": "nominal", "title": "Station Name"},
-          {"field": "elevation", "type": "quantitative", "title": "Elevation (m)"},
-          {"field": "record_span_years", "type": "quantitative", "title": "Record Span (Years)"}
+          {
+            "field": "station_name",
+            "type": "nominal",
+            "title": "Station"
+          },
+          {
+            "field": "elevation",
+            "type": "quantitative",
+            "title": "Elevation (m)"
+          },
+          {
+            "field": "record_span_years",
+            "type": "quantitative",
+            "title": "Years of records"
+          }
         ]
       }
     },
     {
-      "description": "Station Name Labels",
+      "description": "Labels placed left of the dot",
       "data": {
         "url": "data/malaysia_weather_station_dot_map.csv",
         "format": {
           "type": "csv"
         }
       },
+      "transform": [
+        {
+          "filter": "test(regexp('penang|sitiawan|abdul aziz|kota kinabalu|miri|bintulu|sibu|kuching','i'), datum.station_name)"
+        },
+        {
+          "calculate": "replace(datum.station_name, regexp(' INTL$','i'), '')",
+          "as": "label"
+        }
+      ],
       "mark": {
         "type": "text",
-        "fontSize": 8,
+        "fontSize": 11,
         "fontWeight": "bold",
-        "align": "left",
+        "align": "right",
         "baseline": "middle",
-        "dx": -23,
-        "dy": -10,
+        "dx": -9,
+        "dy": -5,
         "color": "#1f2937"
       },
       "encoding": {
@@ -98,10 +134,143 @@
           "type": "quantitative"
         },
         "text": {
-          "field": "station_name",
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Labels placed right of the dot",
+      "data": {
+        "url": "data/malaysia_weather_station_dot_map.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "filter": "test(regexp('ismail petra|kuantan|mersing|sandakan|tawau','i'), datum.station_name)"
+        },
+        {
+          "calculate": "replace(datum.station_name, regexp(' INTL$','i'), '')",
+          "as": "label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 9,
+        "dy": -5,
+        "color": "#1f2937"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Labels placed below-left of the dot",
+      "data": {
+        "url": "data/malaysia_weather_station_dot_map.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "filter": "test(regexp('kuala lumpur|malacca|melaka|labuan','i'), datum.station_name)"
+        },
+        {
+          "calculate": "replace(datum.station_name, regexp(' INTL$','i'), '')",
+          "as": "label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "align": "right",
+        "baseline": "middle",
+        "dx": -9,
+        "dy": 10,
+        "color": "#1f2937"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Fallback labels for any other station",
+      "data": {
+        "url": "data/malaysia_weather_station_dot_map.csv",
+        "format": {
+          "type": "csv"
+        }
+      },
+      "transform": [
+        {
+          "filter": "!test(regexp('penang|sitiawan|abdul aziz|kota kinabalu|miri|bintulu|sibu|kuching|ismail petra|kuantan|mersing|sandakan|tawau|kuala lumpur|malacca|melaka|labuan','i'), datum.station_name)"
+        },
+        {
+          "calculate": "replace(datum.station_name, regexp(' INTL$','i'), '')",
+          "as": "label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 9,
+        "dy": -5,
+        "color": "#1f2937"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
           "type": "nominal"
         }
       }
     }
-  ]
+  ],
+  "config": {
+    "font": "Inter, sans-serif",
+    "background": "transparent",
+    "view": {
+      "stroke": null
+    }
+  }
 }

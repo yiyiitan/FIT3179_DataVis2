@@ -1,6 +1,5 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Lollipop chart of each year's temperature compared with the 1991 to 2020 average.",
   "width": "container",
   "height": 450,
   "background": "transparent",
@@ -53,8 +52,12 @@
       "title": "Year",
       "scale": {
         "domain": [
-          {"year": 1989},
-          {"year": 2026}
+          {
+            "year": 1989
+          },
+          {
+            "year": 2026
+          }
         ]
       },
       "axis": {
@@ -69,6 +72,74 @@
     }
   },
   "layer": [
+    {
+      "description": "Band marking 2015 onwards, supports the headline claim",
+      "data": {
+        "values": [
+          {
+            "date": "2014-07-01",
+            "end_date": "2025-07-01",
+            "y_top": 1.1,
+            "y_bottom": -0.7,
+            "ty": -0.5,
+            "date_mid": "2020-01-01",
+            "label": [
+              "Every year since 2015",
+              "was warmer than average"
+            ]
+          }
+        ]
+      },
+      "layer": [
+        {
+          "mark": {
+            "type": "rect",
+            "color": "#f6d8bd",
+            "opacity": 0.45
+          },
+          "encoding": {
+            "x": {
+              "field": "date",
+              "type": "temporal"
+            },
+            "x2": {
+              "field": "end_date"
+            },
+            "y": {
+              "field": "y_top",
+              "type": "quantitative"
+            },
+            "y2": {
+              "field": "y_bottom"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "text",
+            "fontSize": 12,
+            "fontWeight": "bold",
+            "color": "#7a3a00",
+            "align": "center",
+            "baseline": "middle"
+          },
+          "encoding": {
+            "x": {
+              "field": "date_mid",
+              "type": "temporal"
+            },
+            "y": {
+              "field": "ty",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label",
+              "type": "nominal"
+            }
+          }
+        }
+      ]
+    },
     {
       "description": "Zero line is the 1991 to 2020 average",
       "mark": {
@@ -95,7 +166,10 @@
           "type": "quantitative",
           "title": "Compared with the 1991–2020 average (°C)",
           "scale": {
-            "domain": [-0.7, 1.1]
+            "domain": [
+              -0.7,
+              1.1
+            ]
           },
           "axis": {
             "format": "+.1f",
@@ -116,8 +190,8 @@
               "Warmer"
             ],
             "range": [
-              "#0072b2",
-              "#d55e00"
+              "#2E2910",
+              "#7C0E44"
             ]
           },
           "legend": {
@@ -150,8 +224,8 @@
               "Warmer"
             ],
             "range": [
-              "#0072b2",
-              "#d55e00"
+              "#F0E442",
+              "#CC79A7"
             ]
           }
         },
@@ -189,7 +263,7 @@
           "filter": "datum.year === 1998"
         },
         {
-          "calculate": "'1998 spike: ' + format(datum.anomaly, '+.2f') + '°C'",
+          "calculate": "'1998 El Niño event: ' + format(datum.anomaly, '+.2f') + '°C'",
           "as": "label"
         }
       ],
@@ -249,7 +323,7 @@
       "data": {
         "values": [
           {
-            "date": "1990-06-01",
+            "date": "1990-8-01",
             "end_date": "1999-01-01",
             "y_top": 1.02,
             "y_bottom": 0.88
@@ -292,7 +366,7 @@
       },
       "mark": {
         "type": "text",
-        "fontSize": 13.5,
+        "fontSize": 13,
         "fontWeight": "bold",
         "color": "#0b4f78",
         "align": "left",
@@ -316,7 +390,7 @@
     }
   ],
   "config": {
-    "font": "Plus Jakarta Sans",
+    "font": "Inter, sans-serif",
     "background": "transparent",
     "view": {
       "stroke": null
@@ -326,7 +400,7 @@
       "titleFontSize": 12
     },
     "legend": {
-      "labelFontSize": 15
+      "labelFontSize": 13
     }
   }
 }

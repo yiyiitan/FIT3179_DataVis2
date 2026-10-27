@@ -1,21 +1,9 @@
-
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Radial chart of Malaysia's temperature range for each month of the year.",
   "width": 380,
   "height": 380,
   "padding": 10,
   "background": "transparent",
-  "title": {
-    "text": "A normal year in Malaysia",
-    "subtitle": [
-      "Each wedge spans the lowest to highest temperature.",
-      "The orange line shows the monthly average."
-    ],
-    "fontSize": 14,
-    "subtitleFontSize": 12,
-    "offset": 14
-  },
   "data": {
     "url": "data/observed_seasonal_cycle.csv",
     "format": {
@@ -36,19 +24,27 @@
       "as": "tmax"
     },
     {
+      "calculate": "toNumber(datum['Average daily Minimum Surface Air Temperature (°C)'])",
+      "as": "tdmin"
+    },
+    {
+      "calculate": "toNumber(datum['Average daily Maximum Surface Air Temperature (°C)'])",
+      "as": "tdmax"
+    },
+    {
       "calculate": "toNumber(datum['Average Surface Air Temperature (°C)'])",
       "as": "avg"
     },
     {
-      "calculate": "datum.m * PI / 6",
+      "calculate": "datum.m * PI / 6 + 0.012",
       "as": "a0"
     },
     {
-      "calculate": "datum.a0 + PI / 6",
+      "calculate": "datum.m * PI / 6 + PI / 6 - 0.012",
       "as": "a1"
     },
     {
-      "calculate": "datum.a0 + PI / 12",
+      "calculate": "datum.m * PI / 6 + PI / 12",
       "as": "am"
     },
     {
@@ -58,6 +54,14 @@
     {
       "calculate": "datum.tmax - 15",
       "as": "rmax"
+    },
+    {
+      "calculate": "datum.tdmin - 15",
+      "as": "rdmin"
+    },
+    {
+      "calculate": "datum.tdmax - 15",
+      "as": "rdmax"
     },
     {
       "calculate": "(datum.avg - 15) * sin(datum.am)",
@@ -70,68 +74,11 @@
   ],
   "layer": [
     {
-      "description": "Concentric rings",
-      "data": {
-        "values": [
-          {
-            "r": 5
-          },
-          {
-            "r": 10
-          },
-          {
-            "r": 15
-          },
-          {
-            "r": 20
-          }
-        ]
-      },
-      "transform": [
-        {
-          "calculate": "datum.r + 0.06",
-          "as": "r2"
-        }
-      ],
-      "mark": {
-        "type": "arc",
-        "color": "#d9d2c5"
-      },
-      "encoding": {
-        "theta": {
-          "value": 0
-        },
-        "theta2": {
-          "value": 6.283185307
-        },
-        "radius": {
-          "field": "r",
-          "type": "quantitative",
-          "scale": {
-            "type": "linear",
-            "domain": [
-              0,
-              24
-            ],
-            "range": [
-              0,
-              190
-            ]
-          }
-        },
-        "radius2": {
-          "field": "r2"
-        }
-      }
-    },
-    {
-      "description": "Temperature range wedges",
+      "description": "Record range wedges (min of daily min to max of daily max)",
       "mark": {
         "type": "arc",
         "color": "#f1c697",
-        "opacity": 0.75,
-        "stroke": "#ffffff",
-        "strokeWidth": 0.8
+        "opacity": 0.7
       },
       "encoding": {
         "theta": {
@@ -165,42 +112,156 @@
         },
         "radius2": {
           "field": "rmax"
+        },
+        "tooltip": [
+          {
+            "field": "Category",
+            "type": "nominal",
+            "title": "Month"
+          },
+          {
+            "field": "tmax",
+            "type": "quantitative",
+            "title": "Record high (°C)",
+            "format": ".1f"
+          },
+          {
+            "field": "tdmax",
+            "type": "quantitative",
+            "title": "Typical daily high (°C)",
+            "format": ".1f"
+          },
+          {
+            "field": "avg",
+            "type": "quantitative",
+            "title": "Average (°C)",
+            "format": ".1f"
+          },
+          {
+            "field": "tdmin",
+            "type": "quantitative",
+            "title": "Typical daily low (°C)",
+            "format": ".1f"
+          },
+          {
+            "field": "tmin",
+            "type": "quantitative",
+            "title": "Record low (°C)",
+            "format": ".1f"
+          },
+          {
+            "field": "Precipitation (mm)",
+            "type": "quantitative",
+            "title": "Rainfall (mm)",
+            "format": ".0f"
+          }
+        ],
+        "opacity": {
+          "condition": {
+            "param": "hoverMonth",
+            "value": 1
+          },
+          "value": 0.38
+        }
+      },
+      "params": [
+        {
+          "name": "hoverMonth",
+          "select": {
+            "type": "point",
+            "on": "pointerover",
+            "clear": "pointerout",
+            "fields": [
+              "Category"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "description": "Typical daily range wedges (average daily min to average daily max)",
+      "mark": {
+        "type": "arc",
+        "color": "#e08a3c",
+        "opacity": 0.85
+      },
+      "encoding": {
+        "theta": {
+          "field": "a0",
+          "type": "quantitative",
+          "stack": false,
+          "scale": {
+            "domain": [
+              0,
+              6.283185307
+            ]
+          }
+        },
+        "theta2": {
+          "field": "a1"
+        },
+        "radius": {
+          "field": "rdmin",
+          "type": "quantitative",
+          "scale": {
+            "type": "linear",
+            "domain": [
+              0,
+              24
+            ],
+            "range": [
+              0,
+              190
+            ]
+          }
+        },
+        "radius2": {
+          "field": "rdmax"
+        },
+        "opacity": {
+          "condition": {
+            "param": "hoverMonth",
+            "value": 1
+          },
+          "value": 0.38
         }
       }
     },
     {
-      "description": "Ring labels, drawn above the wedges so they stay readable",
+      "description": "Concentric rings, drawn above the wedges so every ring is visible",
       "data": {
         "values": [
           {
-            "r": 5,
-            "t": "20°C"
+            "r": 5
           },
           {
-            "r": 10,
-            "t": "25°C"
+            "r": 10
           },
           {
-            "r": 15,
-            "t": "30°C"
+            "r": 15
           },
           {
-            "r": 20,
-            "t": "35°C"
+            "r": 20
           }
         ]
       },
+      "transform": [
+        {
+          "calculate": "datum.r + 0.08",
+          "as": "r2"
+        }
+      ],
       "mark": {
-        "type": "text",
-        "fontSize": 9.5,
-        "fontWeight": "bold",
+        "type": "arc",
         "color": "#5f574f",
-        "dx": 14,
-        "dy": -3
+        "opacity": 0.35
       },
       "encoding": {
         "theta": {
           "value": 0
+        },
+        "theta2": {
+          "value": 6.283185307
         },
         "radius": {
           "field": "r",
@@ -217,9 +278,8 @@
             ]
           }
         },
-        "text": {
-          "field": "t",
-          "type": "nominal"
+        "radius2": {
+          "field": "r2"
         }
       }
     },
@@ -227,7 +287,7 @@
       "description": "Average temperature line",
       "mark": {
         "type": "line",
-        "color": "#d55e00",
+        "color": "#7a2e00",
         "strokeWidth": 2.5,
         "interpolate": "cardinal-closed"
       },
@@ -264,9 +324,9 @@
       "description": "Average temperature points",
       "mark": {
         "type": "point",
-        "color": "#d55e00",
+        "color": "#7a2e00",
         "filled": true,
-        "size": 50
+        "size": 45
       },
       "encoding": {
         "x": {
@@ -298,19 +358,22 @@
             "title": "Month"
           },
           {
-            "field": "tmax",
-            "type": "quantitative",
-            "title": "Highest (°C)"
-          },
-          {
             "field": "avg",
             "type": "quantitative",
-            "title": "Average (°C)"
+            "title": "Average (°C)",
+            "format": ".1f"
           },
           {
-            "field": "tmin",
+            "field": "tdmin",
             "type": "quantitative",
-            "title": "Lowest (°C)"
+            "title": "Typical daily low (°C)",
+            "format": ".1f"
+          },
+          {
+            "field": "tdmax",
+            "type": "quantitative",
+            "title": "Typical daily high (°C)",
+            "format": ".1f"
           }
         ]
       }
@@ -325,9 +388,9 @@
       "mark": {
         "type": "point",
         "filled": false,
-        "size": 190,
-        "stroke": "#5a2d00",
-        "strokeWidth": 1.6
+        "size": 200,
+        "stroke": "#3d1a00",
+        "strokeWidth": 1.8
       },
       "encoding": {
         "x": {
@@ -359,28 +422,33 @@
             "title": "Month"
           },
           {
-            "field": "tmax",
-            "type": "quantitative",
-            "title": "Highest (°C)",
-            "format": ".1f"
-          },
-          {
             "field": "avg",
             "type": "quantitative",
             "title": "Average (°C)",
             "format": ".1f"
           },
           {
-            "field": "tmin",
+            "field": "tdmin",
             "type": "quantitative",
-            "title": "Lowest (°C)",
+            "title": "Typical daily low (°C)",
+            "format": ".1f"
+          },
+          {
+            "field": "tdmax",
+            "type": "quantitative",
+            "title": "Typical daily high (°C)",
             "format": ".1f"
           }
         ]
       }
     },
     {
-      "description": "Month labels",
+      "description": "Month labels (regular)",
+      "transform": [
+        {
+          "filter": "datum.Category !== 'Apr' && datum.Category !== 'May'"
+        }
+      ],
       "mark": {
         "type": "text",
         "fontSize": 11,
@@ -419,55 +487,107 @@
       }
     },
     {
-      "description": "Annotation",
+      "description": "Month labels (warmest months, bold)",
+      "transform": [
+        {
+          "filter": "datum.Category === 'Apr' || datum.Category === 'May'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 11.5,
+        "fontWeight": "bold",
+        "color": "#3d1a00"
+      },
+      "encoding": {
+        "theta": {
+          "field": "am",
+          "type": "quantitative",
+          "stack": false,
+          "scale": {
+            "domain": [
+              0,
+              6.283185307
+            ]
+          }
+        },
+        "radius": {
+          "datum": 22.2,
+          "scale": {
+            "type": "linear",
+            "domain": [
+              0,
+              24
+            ],
+            "range": [
+              0,
+              190
+            ]
+          }
+        },
+        "text": {
+          "field": "Category",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Ring labels, centred on the Dec/Jan boundary like an axis",
       "data": {
         "values": [
           {
-            "x": 21,
-            "y": -11,
-            "label": ["Circled are the", "two warmest months"]
+            "r": 5,
+            "t": "20°C"
+          },
+          {
+            "r": 10,
+            "t": "25°C"
+          },
+          {
+            "r": 15,
+            "t": "30°C"
+          },
+          {
+            "r": 20,
+            "t": "35°C"
           }
         ]
       },
       "mark": {
         "type": "text",
-        "fontSize": 12,
+        "fontSize": 9.5,
         "fontWeight": "bold",
-        "color": "#5a2d00",
-        "align": "left"
+        "color": "#3d3630",
+        "dy": -5
       },
       "encoding": {
-        "x": {
-          "field": "x",
-          "type": "quantitative",
-          "scale": {
-            "domain": [
-              -24,
-              24
-            ]
-          },
-          "axis": null
+        "theta": {
+          "value": 0
         },
-        "y": {
-          "field": "y",
+        "radius": {
+          "field": "r",
           "type": "quantitative",
           "scale": {
+            "type": "linear",
             "domain": [
-              -24,
+              0,
               24
+            ],
+            "range": [
+              0,
+              190
             ]
-          },
-          "axis": null
+          }
         },
         "text": {
-          "field": "label",
+          "field": "t",
           "type": "nominal"
         }
       }
     }
   ],
   "config": {
-    "font": "Plus Jakarta Sans",
+    "font": "Inter, sans-serif",
     "background": "transparent",
     "view": {
       "stroke": null

@@ -33,7 +33,10 @@
       "description": "Graticules",
       "data": {
         "graticule": {
-          "step": [30, 30]
+          "step": [
+            30,
+            30
+          ]
         }
       },
       "mark": {
@@ -141,13 +144,21 @@
           "title": "CO₂ in 2024 (billion tonnes)",
           "scale": {
             "type": "sqrt",
-            "range": [12, 2000],
+            "range": [
+              12,
+              2000
+            ],
             "zero": true
           },
           "legend": {
             "orient": "top-left",
             "direction": "vertical",
-            "values": [0.5, 2, 5, 12],
+            "values": [
+              0.5,
+              2,
+              5,
+              12
+            ],
             "format": ".1f",
             "symbolType": "circle"
           }
@@ -157,14 +168,22 @@
           "type": "quantitative",
           "title": "Change from 2023 (%)",
           "scale": {
-            "domain": [-10, 0, 10],
-            "range": ["#1f78b4", "#f2efe9", "#d55e00"],
+            "domain": [
+              -10,
+              0,
+              10
+            ],
+            "range": [
+              "#1f78b4",
+              "#f2efe9",
+              "#d55e00"
+            ],
             "clamp": true
           },
           "legend": {
             "orient": "bottom-right",
             "gradientLength": 140,
-            "format": "+.0f"
+            "labelExpr": "datum.value === 0 ? '0' : format(datum.value, '+.0f')"
           }
         },
         "order": {
@@ -249,7 +268,7 @@
               "United States: 11.7%",
               "Together with China, they",
               "release nearly half of",
-              "the global CO₂"
+              "the world's CO₂"
             ]
           }
         ]
@@ -286,8 +305,8 @@
             "lat": -40,
             "text": [
               "Malaysia: 0.8%",
-              "Tiny carbon footprint, yet",
-              "equally vulnerable to rising heat"
+              "Tiny emitter, yet it",
+              "still feels rising heat"
             ]
           }
         ]
@@ -317,14 +336,14 @@
     }
   ],
   "config": {
-    "font": "Plus Jakarta Sans",
+    "font": "Inter, sans-serif",
     "background": "transparent",
     "view": {
       "stroke": null
     },
     "legend": {
-      "titleFontSize": 11,
-      "labelFontSize": 10,
+      "titleFontSize": 12,
+      "labelFontSize": 12,
       "titleLimit": 300
     }
   }

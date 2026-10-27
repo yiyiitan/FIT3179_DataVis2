@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Temperature Change Across Malaysia</title>
+    <title>Global Temperature Change</title>
 
     <!-- Vega and Vega-Lite libraries -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -15,8 +15,8 @@
 <body>
     <div class="page">
         <header class="header-container">
-            <h1>Global Temperature Change Across Malaysia</h1>
-            <p class="subtitle">How a warming planet is changing life in Malaysia.</p>
+            <h1>Global Temperature Change</h1>
+            <p class="subtitle">How a warming planet is changing life in Malaysia</p>
         </header>
 
         <main class="card-stack">
@@ -26,87 +26,104 @@
                 <span class="section-title">The Global Cause</span>
             </div>
 
-            <!-- Symbol map: full width, text above -->
+            <!-- Symbol map: full width -->
             <section class="card">
-                <h2 class="chart-heading">Who Releases the Most Carbon Dioxide?</h2>
-                <div id="symbol_map" class="vis-container centered"></div>
-                <p>Carbon dioxide traps heat in the air.</p>
-                <p>China and the United States release nearly half of it.</p>
-                <p>Malaysia releases less than one percent. Yet heat ignores borders.</p>
+                <div class="chart-wrapper">
+                    <h2 class="chart-heading">Who Releases the Most Carbon Dioxide?</h2>
+                    <div id="symbol_map" class="vis-container centered"></div>
+                </div>
+                <div class="text-wrapper">
+                    <p>Carbon dioxide (CO<sub>2</sub>) is a gas that traps heat in the atmosphere and warms the whole planet. China and the United States alone release nearly half of the world's CO<sub>2</sub>, while Malaysia releases just 0.8%. But because Malaysia sits near the equator, where it is already hot all year, even a small rise in temperature is strongly felt.</p>
+                </div>
             </section>
 
-            <!-- Donut and area chart: side by side -->
+            <!-- Treemap and area chart: side by side -->
             <section class="card card-pair">
                 <div class="pair-col">
-                        <h2 class="chart-heading">What Produces the Gases?</h2>
-                    <div id="donut_chart" class="vis-container centered"></div>
-                    <p>Power plants cause almost 1 in 3 tonnes.</p>
-                    <p>Transport comes second, then factories and farms.</p>
+                    <div class="chart-wrapper">
+                        <h2 class="chart-heading">What Produces Greenhouse Gases Worldwide?</h2>
+                        <div id="treemap_chart" class="vis-container centered"></div>
+                    </div>
+                    <div class="text-wrapper">
+                        <p>CO<sub>2</sub> is one of several <strong class="emphasis-global">greenhouse gases</strong>, which trap heat like the glass of a greenhouse. Three-quarters (75.5%) come from burning fuel for energy. Electricity generation and road transportation alone account for 45.3% of global emissions, which is nearly half the total. This highlights how heavily modern industry relies on fossil fuels like coal, oil, and gas.</p>
+                    </div>
                 </div>
                 <div class="pair-col">
-                    <h2 class="chart-heading">Malaysia's Emissions Keep Rising</h2>
-                    <div id="area_chart" class="vis-container centered"></div>
-                    <p>Yearly emissions are nine times higher than in 1970.</p>
-                    <p>Carbon dioxide is the biggest part.</p>
+                    <div class="chart-wrapper">
+                        <h2 class="chart-heading">Malaysia's Emissions Keep Rising</h2>
+                        <div id="area_chart" class="vis-container centered"></div>
+                    </div>
+                    <div class="text-wrapper">
+                        <p>Although Malaysia contributes under 1% of the global total, its domestic emissions are expanding rapidly. Driven primarily by carbon dioxide from power plants and vehicles, yearly emissions have surged to nine times their 1970 level.</p>
+                    </div>
                 </div>
             </section>
 
 
             <!-- ================= ACT 2: MALAYSIA HEATS UP ================= -->
-            <div class="section-header">
+            <div class="section-header print-page-start">
                 <span class="section-title">Malaysia Heats Up</span>
             </div>
 
-            <!-- Radial: chart left, text right -->
-            <section class="card card-row" style="grid-template-columns: 1fr 1fr;">
-                <div class="text-container">
-                    <h2 class="chart-heading">Malaysia Is Hot All Year</h2>
-                    <p>Temperatures barely change from month to month.</p>
-                    <p>April and May are the warmest months.</p>
-                    <p>With so little cool relief, extra heat is felt quickly.</p>
+            <!-- Radial: text left, chart right -->
+            <section class="card card-row text-first">
+                <div class="text-wrapper">
+                    <p>Unlike temperate nations with four distinct seasons, Malaysia experiences steady tropical warmth year-round. Because there is no winter or cool period to provide relief, even an increase of 1°C significantly intensifies daily heat stress.</p>
                 </div>
-                <div id="radial_chart" class="vis-container centered"></div>
+                <div class="chart-wrapper">
+                    <h2 class="chart-heading">Malaysia Is Hot All Year</h2>
+                    <div id="radial_chart" class="vis-container centered"></div>
+                </div>
             </section>
 
-            <!-- Lollipop: full width, text above -->
+            <!-- Lollipop: full width -->
             <section class="card">
-                <div class="card-intro">
-                    <h2 class="chart-heading">Recent Years Run Hotter Than Usual</h2>
-                    <p>Each stem compares one year with the 1991–2020 average.</p>
-                    <p>Blue years were cooler. Orange years were warmer.</p>
-                    <p>Every year since 2015 has been warmer than usual.</p>
+                <div class="chart-wrapper">
+                    <h2 class="chart-heading">Malaysia's Recent Years Run Hotter Than Usual</h2>
+                    <div id="lollipop_chart" class="vis-container centered"></div>
                 </div>
-                <div id="lollipop_chart" class="vis-container centered"></div>
+                <div class="text-wrapper">
+                    <p>Each line shows how much warmer or cooler a year was than Malaysia's 1991–2020 average. Since 2015, every year has been warmer than that average, and 2024 set a record at +0.90°C. Hot years are no longer rare exceptions; they have become normal.</p>
+                </div>
+            </section>
+
+            <!-- ================= ACT 2: MALAYSIA HEATS UP ================= -->
+            <div class="section-header print-page-start">
+                <span class="section-title">Warming Across the Country</span>
+            </div>
+
+            <!-- Dot map: full width (moved before the choropleth to introduce the data) -->
+            <section class="card">
+                <div class="chart-wrapper">
+                    <h2 class="chart-heading">Weather Stations Across Malaysia</h2>
+                    <div id="dot_map" class="vis-container centered"></div>
+                </div>
+                <div class="text-wrapper">
+                    <p>These weather stations supply the temperature data. They cover coastal and inland areas across Peninsular Malaysia, Sabah, and Sarawak, and most have between 30 and more than 70 years of records. That is long enough to reveal real long-term trends rather than short-term ups and downs.</p>
+                </div>
             </section>
 
             <!-- Choropleth: full width -->
-            <section class="card">
-                <div>
+            <section class="card print-keep-together temperature-state-card">
+                <div class="chart-wrapper">
                     <h2 class="chart-heading">Temperature by State</h2>
+                    <div id="choropleth_map" class="vis-container centered"></div>
                 </div>
-                <div id="choropleth_map" class="vis-container"></div>
-            </section>
-        
-            <!-- Dot map: full width -->
-            <section class="card">
-                <div>
-                    <h2 class="chart-heading">Weather Stations Across Malaysia</h2>
-                    <p>Bigger circles mean longer records.</p>
-                    <p>Every station sits near sea level.</p>
+                <div class="text-wrapper">
+                    <p>The slider above reflects state temperatures in 2025. Over the last seven decades, average temperatures have shifted upwards across the country, turning the map darker purple. In 2025, Pulau Pinang was the warmest state at 27.9°C.</p>
                 </div>
-                <div id="dot_map" class="vis-container"></div>
             </section>
 
-            <!-- Dumbbell: text left, chart right -->
-            <section class="card card-row text-first">
-                <div class="text-container">
+            <!-- Dumbbell: chart left, text right -->
+            <section class="card card-row chart-first">
+                <div class="chart-wrapper">
                     <h2 class="chart-heading">Every State Is Warmer</h2>
-                    <p>Blue dots show averages from 1951 to 1980.</p>
-                    <p>Orange dots show averages from 1996 to 2025.</p>
-                    <p>Each state warmed by 0.7 to 1.3°C.</p>
-                    <p>Kuala Lumpur warmed the most.</p>
+                    <div id="dumbbell_chart" class="vis-container centered"></div>
+                    <p class="chart-note"><strong>Note:</strong> Each dot is a 30-year average. The earlier period (1951–1980) is compared with the most recent 30 years (1996–2025).</p>
                 </div>
-                <div id="dumbbell_chart" class="vis-container"></div>
+                <div class="text-wrapper">
+                    <p>Comparing 1951–1980 with 1996–2025, every state and federal territory became warmer, by between <strong class="emphasis-warm">0.7°C and 1.3°C</strong>. <strong class="emphasis-warm">Kuala Lumpur warmed the most (+1.3°C)</strong>. One likely reason is the urban heat island effect: concrete, asphalt and buildings soak up heat during the day and release it at night, so cities stay warmer than the countryside around them.</p>
+                </div>
             </section>
 
 
@@ -115,80 +132,82 @@
                 <span class="section-title">What It Means</span>
             </div>
 
-            <!-- Heatmap: full width, text above -->
-            <section class="card">
-                <div class="card-intro">
-                    <h2 class="chart-heading">Malaysia's Rain Is Shifting</h2>
-                    <p>Each square is one month of rain.</p>
-                    <p>Brown months were drier than usual. Purple months were wetter.</p>
-                    <p>A 1998 drought left months far drier than usual.</p>
-                    <p>Since 2020, months have been wetter on average.</p>
+            <!-- Heatmap: full width -->
+            <section class="card print-keep-together rainfall-card">
+                <div class="chart-wrapper">
+                    <h2 class="chart-heading">Malaysia's Rain Is Swinging Between Extremes</h2>
+                    <div id="heatmap_chart" class="vis-container centered"></div>
                 </div>
-                <div id="heatmap_chart" class="vis-container"></div>
+                <div class="text-wrapper">
+                    <p>Each square is one month: brown means less rain than usual for that month, green means more. Since 2020, <strong class="emphasis-rain">very wet months (dark green) appear more often</strong>. Warmer air holds more moisture, so when it rains, it rains harder, raising the risk of floods like those on the east coast in December 2014. <strong class="emphasis-rain">El Niño is a periodic climate phenomenon that alters equatorial atmospheric circulation, bringing prolonged dry spells, reduced rainfall, and elevated temperatures across Southeast Asia.</strong> The 1998 event caused drought, haze and water shortages in Malaysia.</p>
+                </div>
             </section>
 
             <!-- Waffle and bar: side by side -->
             <section class="card card-pair">
                 <div class="pair-col">
-                    <div>
-                        <h2 class="chart-heading">Glaciers Are Disappearing</h2>
-                        <p>Melting ice raises sea levels worldwide.</p>
-                        <p>Malaysia has long coasts and low coastal cities.</p>
+                    <div class="chart-wrapper">
+                        <h2 class="chart-heading">Melting Glaciers Mean Rising Seas for Malaysia's Coasts</h2>
+                        <div id="waffle_chart" class="vis-container centered"></div>
                     </div>
-                    <div id="waffle_chart" class="vis-container"></div>
+                    <div class="text-wrapper">
+                        <p>Glaciers are huge, slow-moving masses of ice found on mountains and near the poles. Scientists project that <strong class="emphasis-impact">67% of the world's glaciers could vanish by 2100</strong> if warming continues on its current path. Their meltwater flows into the ocean, raising sea levels. This matters for Malaysia because many of its people, cities and businesses sit on low-lying coasts, which will face more erosion and more flooding at high tide.</p>
+                        <p class="impact-callout"><strong>For coastal communities in Klang, Pontian and Kota Kinabalu, rising seas mean greater flood and erosion risks.</strong></p>
+                    </div>
                 </div>
                 <div class="pair-col">
-                    <div>
-                        <h2 class="chart-heading">Heat Makes People Ill</h2>
-                        <p>Heat exhaustion is the most reported illness.</p>
-                        <p>Heat stroke is rarer but far more dangerous.</p>
+                    <div class="chart-wrapper">
+                        <h2 class="chart-heading">Heat-Related Illnesses During the 2016 Heatwave</h2>
+                        <div id="bar_chart" class="vis-container centered"></div>
                     </div>
-                    <div id="bar_chart" class="vis-container"></div>
+                    <div class="text-wrapper">
+                        <p>During the 2016 heatwave, one of Malaysia's hottest years on record, 200 people were treated for heat-related illness. Most had heat exhaustion (heavy sweating, dizziness and weakness) or heat cramps (painful muscle spasms). Twenty-two had <strong class="emphasis-impact">heat stroke</strong>, where the body can no longer cool itself, which can damage organs and kill. As hot years become more common, cases like these are likely to increase, especially among outdoor workers, older people and young children.</p>
+                    </div>
                 </div>
             </section>
         </main>
 
-
         <footer class="footer-container">
             <div class="footer-content">
                 <p><strong>Author:</strong> Tan Yi Yi 34478035</p>
-                <p><strong>Date:</strong> 23 October 2026 | FIT3179 Data Visualisation 2</p>
-                <p><strong>Data Sources:</strong>
-                    <a href="https://data.gov.my" target="_blank" rel="noopener">data.gov.my</a> |
-                    <a href="https://www.met.gov.my" target="_blank" rel="noopener">Malaysian Meteorological Department (METMalaysia)</a> |
-                    <a href="https://ourworldindata.org/co2-emissions" target="_blank" rel="noopener">Our World in Data (CO₂ Emissions)</a> |
-                    <a href="https://berkeleyearth.org" target="_blank" rel="noopener">Berkeley Earth Climate Data</a>
-                </p>
+                <p><strong>Date:</strong> 27 October 2026 | FIT3179 Data Visualisation 2</p>
+                <p><strong>Data Sources:</strong></p>
+                <div class="sources">
+                    <p>World Bank Group (<a href="https://climateknowledgeportal.worldbank.org/" target="_blank" rel="noopener">https://climateknowledgeportal.worldbank.org/</a>)</p>
+                    <p>National Aeronautics and Space Administration (<a href="https://data.giss.nasa.gov/gistemp/data_v4.html" target="_blank" rel="noopener">https://data.giss.nasa.gov/gistemp/data_v4.html</a>)</p>
+                    <p>Ministry of Health Malaysia (<a href="https://www.researchgate.net/publication/397192607_CLIMATE_CHANGE_AND_HEALTH_IN_MALAYSIA_IMPLICATIONS_AND_CHALLENGES" target="_blank" rel="noopener">https://www.researchgate.net/publication/397192607_CLIMATE_CHANGE_AND_HEALTH_IN_MALAYSIA_IMPLICATIONS_AND_CHALLENGES</a>)</p>
+                    <p>National Centers for Environmental Information (<a href="https://www.ncei.noaa.gov/" target="_blank" rel="noopener">https://www.ncei.noaa.gov/</a>)</p>
+                </div>
             </div>
         </footer>
 
     </div>
 
     <!-- Vega embedding -->
-     <script>
-            var map_spec1 = "js/waffle_chart.vg.json";
-            var map_spec2 = "js/radial_chart.vg.json";
-            var map_spec3 = "js/lollipop_chart.vg.json";
-            var map_spec4 = "js/symbol_map.vg.json";
-            var map_spec5 = "js/choropleth_map.vg.json";
-            var map_spec6 = "js/dot_map.vg.json";
-            var map_spec7 = "js/dumbbell_chart.vg.json";
-            var map_spec8 = "js/heatmap_chart.vg.json";
-            var map_spec9 = "js/area_chart.vg.json";
-            var map_spec10 = "js/donut_chart.vg.json";
-            var map_spec11 = "js/bar_chart.vg.json";
+    <script>
+        var map_spec1 = "js/waffle_chart.vg.json";
+        var map_spec2 = "js/radial_chart.vg.json";
+        var map_spec3 = "js/lollipop_chart.vg.json";
+        var map_spec4 = "js/symbol_map.vg.json";
+        var map_spec5 = "js/choropleth_map.vg.json";
+        var map_spec6 = "js/dot_map.vg.json";
+        var map_spec7 = "js/dumbbell_chart.vg.json";
+        var map_spec8 = "js/heatmap_chart.vg.json";
+        var map_spec9 = "js/area_chart.vg.json";
+        var map_spec10 = "js/treemap_chart.vg.json";
+        var map_spec11 = "js/bar_chart.vg.json";
 
-            vegaEmbed('#waffle_chart', map_spec1, { actions: false }).catch(console.error);
-            vegaEmbed('#radial_chart', map_spec2, { actions: false }).catch(console.error);
-            vegaEmbed('#lollipop_chart', map_spec3, { actions: false }).catch(console.error);
-            vegaEmbed('#symbol_map', map_spec4, { actions: false }).catch(console.error);
-            vegaEmbed('#choropleth_map', map_spec5, { actions: false }).catch(console.error);
-            vegaEmbed('#dot_map', map_spec6, { actions: false }).catch(console.error);
-            vegaEmbed('#dumbbell_chart', map_spec7, { actions: false }).catch(console.error);
-            vegaEmbed('#heatmap_chart', map_spec8, { actions: false }).catch(console.error);
-            vegaEmbed('#area_chart', map_spec9, { actions: false }).catch(console.error);
-            vegaEmbed('#donut_chart', map_spec10, { actions: false }).catch(console.error);
-            vegaEmbed('#bar_chart', map_spec11, { actions: false }).catch(console.error);
+        vegaEmbed('#waffle_chart', map_spec1, { actions: false }).catch(console.error);
+        vegaEmbed('#radial_chart', map_spec2, { actions: false }).catch(console.error);
+        vegaEmbed('#lollipop_chart', map_spec3, { actions: false }).catch(console.error);
+        vegaEmbed('#symbol_map', map_spec4, { actions: false }).catch(console.error);
+        vegaEmbed('#choropleth_map', map_spec5, { actions: false }).catch(console.error);
+        vegaEmbed('#dot_map', map_spec6, { actions: false }).catch(console.error);
+        vegaEmbed('#dumbbell_chart', map_spec7, { actions: false }).catch(console.error);
+        vegaEmbed('#heatmap_chart', map_spec8, { actions: false }).catch(console.error);
+        vegaEmbed('#area_chart', map_spec9, { actions: false }).catch(console.error);
+        vegaEmbed('#treemap_chart', map_spec10, { actions: false }).catch(console.error);
+        vegaEmbed('#bar_chart', map_spec11, { actions: false }).catch(console.error);
     </script>
 </body>
 </html>
